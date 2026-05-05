@@ -5,6 +5,29 @@ import { computeMetrics } from "@/lib/metrics";
 import { summarizeWithConfiguredLLM } from "@/lib/llm/provider";
 import type { TrendingSince } from "@/types/trending";
 
+export type TrendingUpdateTrigger = "cron" | "manual" | "script";
+
+export class TrendingUpdateAlreadyRunningError extends Error {
+  statusCode = 409;
+
+  constructor(public run: Awaited<ReturnType<typeof prisma.trendingUpdateRun.findFirst>>) {
+    super("已有更新任务正在运行，请稍后再试");
+    this.name = "TrendingUpdateAlreadyRunningError";
+  }
+}
+
+export class TrendingUpdateRunFailedError extends Error {
+  statusCode = 500;
+
+  constructor(
+    message: string,
+    public run: Awaited<ReturnType<typeof prisma.trendingUpdateRun.findUnique>>,
+  ) {
+    super(message);
+    this.name = "TrendingUpdateRunFailedError";
+  }
+}
+
 function parseLanguages() {
   return (process.env.GITHUB_TRENDING_LANGUAGES || "all")
     .split(",")
@@ -26,7 +49,15 @@ export async function runTrendingAgent(options?: {
   const dateKey = formatDateKey(date);
   const languages = options?.language ? [options.language] : parseLanguages();
   const since = options?.since ?? parseSince();
-  const results = [];
+  const results: Array<{
+    snapshotId: string;
+    date: string;
+    language: string;
+    since: TrendingSince;
+    repoCount: number;
+    fallback: boolean;
+    error?: string;
+  }> = [];
 
   for (const language of languages) {
     const repos = await fetchTrendingRepos({ language, since });
@@ -112,4 +143,82 @@ export async function runTrendingAgent(options?: {
   }
 
   return results;
+}
+
+export async function runTrendingAgentWithLog(options?: {
+  date?: Date;
+  language?: string;
+  since?: TrendingSince;
+  trigger?: TrendingUpdateTrigger;
+}) {
+  const date = options?.date ?? new Date();
+  const dateKey = formatDateKey(date);
+  const languages = options?.language ? [options.language] : parseLanguages();
+  const since = options?.since ?? parseSince();
+  const trigger = options?.trigger ?? "cron";
+  const startedAt = new Date();
+  const runningSince = new Date(startedAt.getTime() - 30 * 60 * 1000);
+
+  const runningRun = await prisma.trendingUpdateRun.findFirst({
+    where: {
+      status: "running",
+      startedAt: { gte: runningSince },
+    },
+    orderBy: { startedAt: "desc" },
+  });
+
+  if (runningRun) {
+    throw new TrendingUpdateAlreadyRunningError(runningRun);
+  }
+
+  const run = await prisma.trendingUpdateRun.create({
+    data: {
+      status: "running",
+      trigger,
+      dateKey,
+      since,
+      languagesJson: languages,
+      startedAt,
+      message: "更新任务已开始",
+    },
+  });
+
+  try {
+    const results = await runTrendingAgent({ date, language: options?.language, since });
+    const finishedAt = new Date();
+    const repoCount = results.reduce((sum, item) => sum + item.repoCount, 0);
+    const snapshotCount = results.length;
+    const message = `更新成功，共写入 ${repoCount} 个仓库，生成 ${snapshotCount} 个快照。`;
+    const updatedRun = await prisma.trendingUpdateRun.update({
+      where: { id: run.id },
+      data: {
+        status: "success",
+        finishedAt,
+        durationMs: finishedAt.getTime() - startedAt.getTime(),
+        repoCount,
+        snapshotCount,
+        resultsJson: results,
+        message,
+      },
+    });
+
+    return { run: updatedRun, results };
+  } catch (error) {
+    const finishedAt = new Date();
+    const errorMessage = error instanceof Error ? error.message : "更新失败";
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    const updatedRun = await prisma.trendingUpdateRun.update({
+      where: { id: run.id },
+      data: {
+        status: "failed",
+        finishedAt,
+        durationMs: finishedAt.getTime() - startedAt.getTime(),
+        errorMessage,
+        errorStack,
+        message: `更新失败：${errorMessage}`,
+      },
+    });
+
+    throw new TrendingUpdateRunFailedError(errorMessage, updatedRun);
+  }
 }

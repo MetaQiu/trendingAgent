@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   TrendingSnapshot: 'TrendingSnapshot',
-  TrendingRepo: 'TrendingRepo'
+  TrendingRepo: 'TrendingRepo',
+  TrendingUpdateRun: 'TrendingUpdateRun'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -108,6 +109,30 @@ export const TrendingRepoScalarFieldEnum = {
 export type TrendingRepoScalarFieldEnum = (typeof TrendingRepoScalarFieldEnum)[keyof typeof TrendingRepoScalarFieldEnum]
 
 
+export const TrendingUpdateRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  trigger: 'trigger',
+  dateKey: 'dateKey',
+  since: 'since',
+  languagesJson: 'languagesJson',
+  repoCount: 'repoCount',
+  snapshotCount: 'snapshotCount',
+  message: 'message',
+  errorMessage: 'errorMessage',
+  errorStack: 'errorStack',
+  resultsJson: 'resultsJson',
+  metadataJson: 'metadataJson',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  durationMs: 'durationMs',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TrendingUpdateRunScalarFieldEnum = (typeof TrendingUpdateRunScalarFieldEnum)[keyof typeof TrendingUpdateRunScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -121,6 +146,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

@@ -51,3 +51,8 @@ export type TrendingSnapshot = Prisma.TrendingSnapshotModel
  * 
  */
 export type TrendingRepo = Prisma.TrendingRepoModel
+/**
+ * Model TrendingUpdateRun
+ * 
+ */
+export type TrendingUpdateRun = Prisma.TrendingUpdateRunModel

@@ -45,3 +45,28 @@ model TrendingRepo {
   @@index([snapshotId])
   @@index([repoFullName])
 }
+
+model TrendingUpdateRun {
+  id             String    @id @default(cuid())
+  status         String
+  trigger        String
+  dateKey        String?
+  since          String?
+  languagesJson  Json
+  repoCount      Int       @default(0)
+  snapshotCount  Int       @default(0)
+  message        String?
+  errorMessage   String?
+  errorStack     String?
+  resultsJson    Json?
+  metadataJson   Json?
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+  durationMs     Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([startedAt])
+  @@index([status])
+  @@index([trigger])
+}

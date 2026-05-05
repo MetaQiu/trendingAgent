@@ -10,4 +10,5 @@
  */
 export type * from './models/TrendingSnapshot'
 export type * from './models/TrendingRepo'
+export type * from './models/TrendingUpdateRun'
 export type * from './commonInputTypes'

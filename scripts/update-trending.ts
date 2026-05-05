@@ -1,8 +1,8 @@
-import { runTrendingAgent } from "../src/lib/agent/trendingAgent";
+import { runTrendingAgentWithLog } from "../src/lib/agent/trendingAgent";
 
-runTrendingAgent()
-  .then((results) => {
-    console.log(JSON.stringify({ ok: true, results }, null, 2));
+runTrendingAgentWithLog({ trigger: "script" })
+  .then(({ run, results }) => {
+    console.log(JSON.stringify({ ok: true, run, results }, null, 2));
   })
   .catch((error) => {
     console.error(error);

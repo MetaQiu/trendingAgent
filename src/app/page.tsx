@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
+import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
 import { RepoCard } from "@/components/RepoCard";
 import { SummaryPanel } from "@/components/SummaryPanel";
+import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
 import { prisma } from "@/lib/db";
 import { computeMetrics } from "@/lib/metrics";
@@ -13,12 +15,44 @@ function toMetricRepos(repos: Array<{ rank: number; owner: string; name: string;
   return repos.map((repo) => ({ ...repo }));
 }
 
+function toRunListItem(run: {
+  id: string;
+  status: string;
+  trigger: string;
+  dateKey: string | null;
+  since: string | null;
+  repoCount: number;
+  snapshotCount: number;
+  message: string | null;
+  errorMessage: string | null;
+  startedAt: Date;
+  finishedAt: Date | null;
+  durationMs: number | null;
+}): TrendingUpdateRunListItem {
+  return {
+    id: run.id,
+    status: run.status,
+    trigger: run.trigger,
+    dateKey: run.dateKey,
+    since: run.since,
+    repoCount: run.repoCount,
+    snapshotCount: run.snapshotCount,
+    message: run.message,
+    errorMessage: run.errorMessage,
+    startedAt: run.startedAt.toISOString(),
+    finishedAt: run.finishedAt?.toISOString() ?? null,
+    durationMs: run.durationMs,
+  };
+}
+
 export default async function Home() {
-  const [snapshot, dateRows] = await Promise.all([
+  const [snapshot, dateRows, runRows] = await Promise.all([
     prisma.trendingSnapshot.findFirst({ orderBy: { date: "desc" }, include: { repos: { orderBy: { rank: "asc" } } } }),
     prisma.trendingSnapshot.findMany({ orderBy: { date: "desc" }, select: { date: true }, take: 20 }),
+    prisma.trendingUpdateRun.findMany({ orderBy: { startedAt: "desc" }, take: 5 }),
   ]);
   const dates = [...new Set(dateRows.map((row) => row.date.toISOString().slice(0, 10)))];
+  const runs = runRows.map(toRunListItem);
 
   if (!snapshot) {
     return (
@@ -27,8 +61,12 @@ export default async function Home() {
           <h1 className="text-4xl font-bold">GitHub Trending 智能总结</h1>
           <p className="mt-4 text-slate-600">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
           <UpdateTrendingButton />
+          <NextTrendingCountdown />
+        </div>
+        <div className="mt-6">
+          <TrendingUpdateRunsPanel runs={runs} />
         </div>
       </main>
     );
@@ -51,7 +89,11 @@ export default async function Home() {
       </header>
 
       <DateSelector dates={dates} />
-      <UpdateTrendingButton />
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+        <UpdateTrendingButton />
+        <NextTrendingCountdown />
+      </div>
+      <TrendingUpdateRunsPanel runs={runs} />
       <SummaryPanel summary={snapshot.summary} metrics={metrics} />
 
       <section className="space-y-4">

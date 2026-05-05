@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   TrendingSnapshot: 'TrendingSnapshot',
-  TrendingRepo: 'TrendingRepo'
+  TrendingRepo: 'TrendingRepo',
+  TrendingUpdateRun: 'TrendingUpdateRun'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trendingSnapshot" | "trendingRepo"
+    modelProps: "trendingSnapshot" | "trendingRepo" | "trendingUpdateRun"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TrendingUpdateRun: {
+      payload: Prisma.$TrendingUpdateRunPayload<ExtArgs>
+      fields: Prisma.TrendingUpdateRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TrendingUpdateRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TrendingUpdateRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        findFirst: {
+          args: Prisma.TrendingUpdateRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TrendingUpdateRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        findMany: {
+          args: Prisma.TrendingUpdateRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>[]
+        }
+        create: {
+          args: Prisma.TrendingUpdateRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        createMany: {
+          args: Prisma.TrendingUpdateRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TrendingUpdateRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>[]
+        }
+        delete: {
+          args: Prisma.TrendingUpdateRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        update: {
+          args: Prisma.TrendingUpdateRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.TrendingUpdateRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TrendingUpdateRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TrendingUpdateRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.TrendingUpdateRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrendingUpdateRunPayload>
+        }
+        aggregate: {
+          args: Prisma.TrendingUpdateRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrendingUpdateRun>
+        }
+        groupBy: {
+          args: Prisma.TrendingUpdateRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrendingUpdateRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TrendingUpdateRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrendingUpdateRunCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -629,6 +704,30 @@ export const TrendingRepoScalarFieldEnum = {
 export type TrendingRepoScalarFieldEnum = (typeof TrendingRepoScalarFieldEnum)[keyof typeof TrendingRepoScalarFieldEnum]
 
 
+export const TrendingUpdateRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  trigger: 'trigger',
+  dateKey: 'dateKey',
+  since: 'since',
+  languagesJson: 'languagesJson',
+  repoCount: 'repoCount',
+  snapshotCount: 'snapshotCount',
+  message: 'message',
+  errorMessage: 'errorMessage',
+  errorStack: 'errorStack',
+  resultsJson: 'resultsJson',
+  metadataJson: 'metadataJson',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  durationMs: 'durationMs',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TrendingUpdateRunScalarFieldEnum = (typeof TrendingUpdateRunScalarFieldEnum)[keyof typeof TrendingUpdateRunScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -642,6 +741,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -856,6 +963,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   trendingSnapshot?: Prisma.TrendingSnapshotOmit
   trendingRepo?: Prisma.TrendingRepoOmit
+  trendingUpdateRun?: Prisma.TrendingUpdateRunOmit
 }
 
 /* Types for Logging */

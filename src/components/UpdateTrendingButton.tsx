@@ -6,6 +6,14 @@ import { useState } from "react";
 type UpdateResult = {
   ok?: boolean;
   error?: string;
+  run?: {
+    id: string;
+    status: string;
+    message: string | null;
+    errorMessage: string | null;
+    repoCount: number;
+    durationMs: number | null;
+  } | null;
   results?: Array<{
     date: string;
     language: string;
@@ -34,7 +42,7 @@ export function UpdateTrendingButton() {
     setMessage("正在抓取 GitHub Trending 并生成总结，请稍候...");
 
     try {
-      const response = await fetch("/api/cron/update-trending", {
+      const response = await fetch("/api/cron/update-trending?trigger=manual", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,17 +51,21 @@ export function UpdateTrendingButton() {
       const data = (await response.json()) as UpdateResult;
 
       if (!response.ok || !data.ok) {
-        throw new Error(data.error || "更新失败");
+        const message = response.status === 409
+          ? "已有更新任务正在运行，请稍后再试"
+          : data.run?.message || data.run?.errorMessage || data.error || "更新失败";
+        throw new Error(message);
       }
 
-      const repoCount = data.results?.reduce((sum, item) => sum + item.repoCount, 0) ?? 0;
+      const repoCount = data.run?.repoCount ?? data.results?.reduce((sum, item) => sum + item.repoCount, 0) ?? 0;
       setStatus("success");
-      setMessage(`更新成功，共写入 ${repoCount} 个仓库。页面即将刷新。`);
+      setMessage(data.run?.message || `更新成功，共写入 ${repoCount} 个仓库。页面即将刷新。`);
       setSecret("");
       router.refresh();
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "更新失败");
+      router.refresh();
     }
   }
 
