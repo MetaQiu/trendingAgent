@@ -75,7 +75,7 @@ export default async function Home() {
         <div>
           <p className="text-sm font-medium text-blue-600">{snapshot.date.toISOString().slice(0, 10)} · {snapshot.language}/{snapshot.since}</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">GitHub Trending 智能总结</h1>
-          <p className="mt-3 text-slate-600">自动抓取、中文总结和趋势可视化，面向 Vercel 部署。</p>
+          <p className="mt-3 text-slate-600">自动抓取、中文总结和趋势可视化。</p>
         </div>
         <nav className="flex flex-wrap gap-3">
           <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>

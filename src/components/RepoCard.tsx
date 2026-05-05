@@ -46,7 +46,7 @@ export function RepoCard({ repo }: RepoCardProps) {
           </div>
           <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-100 px-3 py-3 shadow-sm">
             <p className="text-base font-bold text-emerald-700">+{repo.starsToday.toLocaleString()}</p>
-            <p className="mt-1 font-semibold text-emerald-900">今日新增</p>
+            <p className="mt-1 whitespace-nowrap text-[13px] font-semibold text-emerald-900">今日新增</p>
             <p className="mt-0.5 text-[11px] uppercase tracking-wide text-emerald-600">Stars</p>
           </div>
         </div>
