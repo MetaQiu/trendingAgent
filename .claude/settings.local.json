@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__augment-context-engine__codebase-retrieval",
+      "Bash(git -C \"F:/github/trendingAgent\" status --short)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Skill(claude-api)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

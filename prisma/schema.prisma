@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model TrendingSnapshot {
+  id           String         @id @default(cuid())
+  date         DateTime       @db.Date
+  language     String         @default("all")
+  since        String         @default("daily")
+  summary      String
+  insightsJson Json
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  repos        TrendingRepo[]
+
+  @@unique([date, language, since])
+  @@index([date])
+}
+
+model TrendingRepo {
+  id                   String           @id @default(cuid())
+  snapshotId           String
+  rank                 Int
+  owner                String
+  name                 String
+  repoFullName         String
+  url                  String
+  description          String?
+  language             String?
+  languageColor        String?
+  stars                Int              @default(0)
+  forks                Int              @default(0)
+  starsToday           Int              @default(0)
+  summary              String?
+  recommendationReason String?
+  tagsJson             Json
+  createdAt            DateTime         @default(now())
+  snapshot             TrendingSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([snapshotId])
+  @@index([repoFullName])
+}

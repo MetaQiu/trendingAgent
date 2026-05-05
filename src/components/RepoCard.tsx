@@ -1,0 +1,41 @@
+type RepoCardProps = {
+  repo: {
+    rank: number;
+    repoFullName: string;
+    url: string;
+    description: string | null;
+    language: string | null;
+    languageColor: string | null;
+    stars: number;
+    forks: number;
+    starsToday: number;
+    summary?: string | null;
+    recommendationReason?: string | null;
+  };
+};
+
+export function RepoCard({ repo }: RepoCardProps) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="text-sm font-medium text-blue-600">#{repo.rank}</p>
+          <a className="mt-1 block text-xl font-semibold text-slate-950 hover:text-blue-600" href={repo.url} target="_blank" rel="noreferrer">
+            {repo.repoFullName}
+          </a>
+          <p className="mt-2 text-slate-600">{repo.summary || repo.description || "暂无描述"}</p>
+          {repo.recommendationReason ? <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">{repo.recommendationReason}</p> : null}
+        </div>
+        <div className="grid min-w-48 grid-cols-3 gap-2 text-center text-sm">
+          <span className="rounded-xl bg-slate-100 px-3 py-2">★ {repo.stars.toLocaleString()}</span>
+          <span className="rounded-xl bg-slate-100 px-3 py-2">Fork {repo.forks.toLocaleString()}</span>
+          <span className="rounded-xl bg-green-100 px-3 py-2 text-green-800">+{repo.starsToday}</span>
+        </div>
+      </div>
+      <div className="mt-4 flex items-center gap-2 text-sm text-slate-500">
+        {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
+        <span>{repo.language || "Unknown"}</span>
+      </div>
+    </article>
+  );
+}
