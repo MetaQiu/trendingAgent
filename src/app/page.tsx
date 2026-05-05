@@ -53,7 +53,7 @@ export default async function Home() {
       <main className="mx-auto max-w-5xl px-6 py-16">
         <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
           <div className="flex justify-end">
-            <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+            <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           </div>
           <h1 className="mt-6 text-4xl font-bold">GitHub Trending 智能总结</h1>
           <p className="mt-4 text-slate-600">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
@@ -78,8 +78,8 @@ export default async function Home() {
           <p className="mt-3 text-slate-600">自动抓取、中文总结和趋势可视化，面向 Vercel 部署。</p>
         </div>
         <nav className="flex flex-wrap gap-3">
-          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
-          <Link className="rounded-full border border-blue-200 bg-blue-600 px-5 py-2 font-medium text-white shadow-sm hover:bg-blue-700" href="/dashboard">仪表盘</Link>
+          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+          <Link className="rounded-full border border-emerald-200 bg-emerald-500 px-5 py-2 font-medium text-white! shadow-sm hover:bg-emerald-600" href="/dashboard">仪表盘</Link>
           <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
       </header>

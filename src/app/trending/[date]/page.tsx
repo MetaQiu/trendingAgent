@@ -31,7 +31,7 @@ export default async function TrendingDatePage({ params }: { params: Promise<{ d
           <h1 className="text-3xl font-bold">{date} Trending 快照</h1>
         </div>
         <nav className="flex flex-wrap gap-3">
-          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href="/">返回首页</Link>
         </nav>
       </header>
