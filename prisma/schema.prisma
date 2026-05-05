@@ -37,6 +37,7 @@ model TrendingRepo {
   forks                Int              @default(0)
   starsToday           Int              @default(0)
   summary              String?
+  readmeSummary        String?
   recommendationReason String?
   tagsJson             Json
   createdAt            DateTime         @default(now())

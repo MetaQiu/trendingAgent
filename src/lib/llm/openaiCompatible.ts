@@ -1,8 +1,8 @@
-import { buildTrendingSummaryPrompt } from "@/lib/agent/prompts";
-import { trendingSummarySchema } from "@/lib/agent/schemas";
-import type { TrendingRepoItem, TrendingSummary } from "@/types/trending";
+import { buildDailyTrendingSummaryPrompt, buildRepoReadmeSummaryPrompt, buildTrendingSummaryPrompt } from "@/lib/agent/prompts";
+import { dailyTrendingSummarySchema, repoReadmeSummarySchema, trendingSummarySchema } from "@/lib/agent/schemas";
+import type { DailyTrendingSummary, RepoReadmeSummary, TrendingRepoItem, TrendingSummary } from "@/types/trending";
 
-export async function summarizeWithOpenAICompatible(repos: TrendingRepoItem[], dateKey: string): Promise<TrendingSummary> {
+async function createJsonCompletion(prompt: string, maxTokens: number) {
   const apiKey = process.env.OPENAI_API_KEY;
   const baseUrl = process.env.OPENAI_BASE_URL;
   const model = process.env.OPENAI_MODEL;
@@ -19,10 +19,11 @@ export async function summarizeWithOpenAICompatible(repos: TrendingRepoItem[], d
     },
     body: JSON.stringify({
       model,
+      max_tokens: maxTokens,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: "你是严谨的中文技术趋势分析师。只输出 JSON。" },
-        { role: "user", content: buildTrendingSummaryPrompt(repos, dateKey) },
+        { role: "user", content: prompt },
       ],
     }),
   });
@@ -37,5 +38,33 @@ export async function summarizeWithOpenAICompatible(repos: TrendingRepoItem[], d
     throw new Error("OpenAI-compatible 未返回文本内容");
   }
 
-  return trendingSummarySchema.parse(JSON.parse(content));
+  return JSON.parse(content);
+}
+
+export async function summarizeWithOpenAICompatible(repos: TrendingRepoItem[], dateKey: string): Promise<TrendingSummary> {
+  return trendingSummarySchema.parse(await createJsonCompletion(buildTrendingSummaryPrompt(repos, dateKey), 6000));
+}
+
+export async function summarizeRepoReadmeWithOpenAICompatible({
+  repo,
+  readmeText,
+  dateKey,
+}: {
+  repo: TrendingRepoItem;
+  readmeText: string | null;
+  dateKey: string;
+}): Promise<RepoReadmeSummary> {
+  return repoReadmeSummarySchema.parse(await createJsonCompletion(buildRepoReadmeSummaryPrompt({ repo, readmeText, dateKey }), 1200));
+}
+
+export async function summarizeDailyTrendingWithOpenAICompatible({
+  repos,
+  repoSummaries,
+  dateKey,
+}: {
+  repos: TrendingRepoItem[];
+  repoSummaries: RepoReadmeSummary[];
+  dateKey: string;
+}): Promise<DailyTrendingSummary> {
+  return dailyTrendingSummarySchema.parse(await createJsonCompletion(buildDailyTrendingSummaryPrompt({ repos, repoSummaries, dateKey }), 2500));
 }

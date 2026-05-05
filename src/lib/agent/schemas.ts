@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const trendingSummarySchema = z.object({
+export const dailyTrendingSummarySchema = z.object({
   dailySummary: z.string(),
   trendInsights: z.array(z.string()),
   topRecommendations: z.array(
@@ -9,6 +9,17 @@ export const trendingSummarySchema = z.object({
       reason: z.string(),
     }),
   ),
+});
+
+export const repoReadmeSummarySchema = z.object({
+  repoFullName: z.string(),
+  summary: z.string(),
+  readmeSummary: z.string(),
+  recommendationReason: z.string().nullable(),
+  tags: z.array(z.string()),
+});
+
+export const trendingSummarySchema = dailyTrendingSummarySchema.extend({
   repoSummaries: z.array(
     z.object({
       repoFullName: z.string(),
@@ -18,7 +29,7 @@ export const trendingSummarySchema = z.object({
   ),
 });
 
-export const trendingSummaryJsonSchema = {
+export const dailyTrendingSummaryJsonSchema = {
   type: "object",
   properties: {
     dailySummary: { type: "string" },
@@ -35,6 +46,28 @@ export const trendingSummaryJsonSchema = {
         additionalProperties: false,
       },
     },
+  },
+  required: ["dailySummary", "trendInsights", "topRecommendations"],
+  additionalProperties: false,
+} as const;
+
+export const repoReadmeSummaryJsonSchema = {
+  type: "object",
+  properties: {
+    repoFullName: { type: "string" },
+    summary: { type: "string" },
+    readmeSummary: { type: "string" },
+    recommendationReason: { anyOf: [{ type: "string" }, { type: "null" }] },
+    tags: { type: "array", items: { type: "string" } },
+  },
+  required: ["repoFullName", "summary", "readmeSummary", "recommendationReason", "tags"],
+  additionalProperties: false,
+} as const;
+
+export const trendingSummaryJsonSchema = {
+  type: "object",
+  properties: {
+    ...dailyTrendingSummaryJsonSchema.properties,
     repoSummaries: {
       type: "array",
       items: {

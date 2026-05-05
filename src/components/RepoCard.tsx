@@ -10,6 +10,7 @@ type RepoCardProps = {
     forks: number;
     starsToday: number;
     summary?: string | null;
+    readmeSummary?: string | null;
     recommendationReason?: string | null;
   };
 };
@@ -24,6 +25,12 @@ export function RepoCard({ repo }: RepoCardProps) {
             {repo.repoFullName}
           </a>
           <p className="mt-2 text-slate-600">{repo.summary || repo.description || "暂无描述"}</p>
+          {repo.readmeSummary ? (
+            <div className="mt-3 rounded-xl bg-blue-50 p-3 text-sm text-blue-900">
+              <p className="font-semibold">README 精读</p>
+              <p className="mt-1 leading-6">{repo.readmeSummary}</p>
+            </div>
+          ) : null}
           {repo.recommendationReason ? <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">{repo.recommendationReason}</p> : null}
         </div>
         <div className="grid min-w-48 grid-cols-3 gap-2 text-center text-sm">

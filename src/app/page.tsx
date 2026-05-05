@@ -83,7 +83,7 @@ export default async function Home() {
           <p className="mt-3 text-slate-600">自动抓取、中文总结和趋势可视化，面向 Vercel 部署。</p>
         </div>
         <nav className="flex gap-3">
-          <Link className="rounded-full bg-slate-950 px-5 py-2 text-white" href="/dashboard">仪表盘</Link>
+          <Link className="rounded-full border border-blue-200 bg-blue-600 px-5 py-2 font-medium text-white shadow-sm hover:bg-blue-700" href="/dashboard">仪表盘</Link>
           <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
       </header>

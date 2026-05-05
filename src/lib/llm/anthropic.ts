@@ -1,7 +1,14 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { buildTrendingSummaryPrompt } from "@/lib/agent/prompts";
-import { trendingSummaryJsonSchema, trendingSummarySchema } from "@/lib/agent/schemas";
-import type { TrendingRepoItem, TrendingSummary } from "@/types/trending";
+import { buildDailyTrendingSummaryPrompt, buildRepoReadmeSummaryPrompt, buildTrendingSummaryPrompt } from "@/lib/agent/prompts";
+import {
+  dailyTrendingSummaryJsonSchema,
+  dailyTrendingSummarySchema,
+  repoReadmeSummaryJsonSchema,
+  repoReadmeSummarySchema,
+  trendingSummaryJsonSchema,
+  trendingSummarySchema,
+} from "@/lib/agent/schemas";
+import type { DailyTrendingSummary, RepoReadmeSummary, TrendingRepoItem, TrendingSummary } from "@/types/trending";
 
 function extractAnthropicError(error: unknown): Error {
   if (error instanceof Anthropic.AuthenticationError) {
@@ -22,27 +29,39 @@ function extractAnthropicError(error: unknown): Error {
   return error instanceof Error ? error : new Error("未知 Anthropic 错误");
 }
 
-export async function summarizeWithAnthropic(repos: TrendingRepoItem[], dateKey: string): Promise<TrendingSummary> {
+function createClient() {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("缺少 ANTHROPIC_API_KEY 环境变量");
   }
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
+
+async function createStructuredJson<T>({
+  prompt,
+  schema,
+  maxTokens,
+}: {
+  prompt: string;
+  schema: Record<string, unknown>;
+  maxTokens: number;
+}): Promise<T> {
+  const client = createClient();
 
   try {
     const response = await client.messages.create({
       model: process.env.ANTHROPIC_MODEL || "claude-opus-4-6",
-      max_tokens: 6000,
+      max_tokens: maxTokens,
       thinking: { type: "adaptive" },
       output_config: {
         effort: "high",
         format: {
           type: "json_schema",
-          schema: trendingSummaryJsonSchema,
+          schema,
         },
       },
       system: "你是严谨的中文技术趋势分析师。只输出符合 schema 的 JSON。",
-      messages: [{ role: "user", content: buildTrendingSummaryPrompt(repos, dateKey) }],
+      messages: [{ role: "user", content: prompt }],
     });
 
     const text = response.content.find((block) => block.type === "text")?.text;
@@ -50,8 +69,54 @@ export async function summarizeWithAnthropic(repos: TrendingRepoItem[], dateKey:
       throw new Error("Anthropic 未返回文本内容");
     }
 
-    return trendingSummarySchema.parse(JSON.parse(text));
+    return JSON.parse(text) as T;
   } catch (error) {
     throw extractAnthropicError(error);
   }
+}
+
+export async function summarizeWithAnthropic(repos: TrendingRepoItem[], dateKey: string): Promise<TrendingSummary> {
+  const data = await createStructuredJson<unknown>({
+    prompt: buildTrendingSummaryPrompt(repos, dateKey),
+    schema: trendingSummaryJsonSchema,
+    maxTokens: 6000,
+  });
+
+  return trendingSummarySchema.parse(data);
+}
+
+export async function summarizeRepoReadmeWithAnthropic({
+  repo,
+  readmeText,
+  dateKey,
+}: {
+  repo: TrendingRepoItem;
+  readmeText: string | null;
+  dateKey: string;
+}): Promise<RepoReadmeSummary> {
+  const data = await createStructuredJson<unknown>({
+    prompt: buildRepoReadmeSummaryPrompt({ repo, readmeText, dateKey }),
+    schema: repoReadmeSummaryJsonSchema,
+    maxTokens: 1200,
+  });
+
+  return repoReadmeSummarySchema.parse(data);
+}
+
+export async function summarizeDailyTrendingWithAnthropic({
+  repos,
+  repoSummaries,
+  dateKey,
+}: {
+  repos: TrendingRepoItem[];
+  repoSummaries: RepoReadmeSummary[];
+  dateKey: string;
+}): Promise<DailyTrendingSummary> {
+  const data = await createStructuredJson<unknown>({
+    prompt: buildDailyTrendingSummaryPrompt({ repos, repoSummaries, dateKey }),
+    schema: dailyTrendingSummaryJsonSchema,
+    maxTokens: 2500,
+  });
+
+  return dailyTrendingSummarySchema.parse(data);
 }

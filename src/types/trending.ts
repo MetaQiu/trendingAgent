@@ -20,15 +20,36 @@ export type RepoSummary = {
   tags: string[];
 };
 
+export type RepoReadmeSummary = {
+  repoFullName: string;
+  summary: string;
+  readmeSummary: string;
+  recommendationReason: string | null;
+  tags: string[];
+};
+
+export type RepoReadmeSummaryResult = {
+  summary: RepoReadmeSummary;
+  provider: string;
+  fallback: boolean;
+  error?: string;
+  readmeFetched: boolean;
+  readmeLength: number;
+  durationMs: number;
+};
+
 export type TopRecommendation = {
   repoFullName: string;
   reason: string;
 };
 
-export type TrendingSummary = {
+export type DailyTrendingSummary = {
   dailySummary: string;
   trendInsights: string[];
   topRecommendations: TopRecommendation[];
+};
+
+export type TrendingSummary = DailyTrendingSummary & {
   repoSummaries: RepoSummary[];
 };
 

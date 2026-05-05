@@ -37,7 +37,6 @@ export function NextTrendingCountdown() {
       <div className="mt-3 space-y-1 text-sm text-slate-600">
         <p>UTC 时间：{nextRun.toISOString().replace(".000Z", "Z")}</p>
         <p>本地时间：{nextRun.toLocaleString()}</p>
-        <p className="text-xs text-slate-500">按 Vercel Cron 5 1 * * *（UTC 01:05）计算，请与 vercel.json 保持一致。</p>
       </div>
     </div>
   );

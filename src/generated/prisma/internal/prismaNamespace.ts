@@ -696,6 +696,7 @@ export const TrendingRepoScalarFieldEnum = {
   forks: 'forks',
   starsToday: 'starsToday',
   summary: 'summary',
+  readmeSummary: 'readmeSummary',
   recommendationReason: 'recommendationReason',
   tagsJson: 'tagsJson',
   createdAt: 'createdAt'

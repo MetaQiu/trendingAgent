@@ -55,6 +55,7 @@ export type TrendingRepoMinAggregateOutputType = {
   forks: number | null
   starsToday: number | null
   summary: string | null
+  readmeSummary: string | null
   recommendationReason: string | null
   createdAt: Date | null
 }
@@ -74,6 +75,7 @@ export type TrendingRepoMaxAggregateOutputType = {
   forks: number | null
   starsToday: number | null
   summary: string | null
+  readmeSummary: string | null
   recommendationReason: string | null
   createdAt: Date | null
 }
@@ -93,6 +95,7 @@ export type TrendingRepoCountAggregateOutputType = {
   forks: number
   starsToday: number
   summary: number
+  readmeSummary: number
   recommendationReason: number
   tagsJson: number
   createdAt: number
@@ -129,6 +132,7 @@ export type TrendingRepoMinAggregateInputType = {
   forks?: true
   starsToday?: true
   summary?: true
+  readmeSummary?: true
   recommendationReason?: true
   createdAt?: true
 }
@@ -148,6 +152,7 @@ export type TrendingRepoMaxAggregateInputType = {
   forks?: true
   starsToday?: true
   summary?: true
+  readmeSummary?: true
   recommendationReason?: true
   createdAt?: true
 }
@@ -167,6 +172,7 @@ export type TrendingRepoCountAggregateInputType = {
   forks?: true
   starsToday?: true
   summary?: true
+  readmeSummary?: true
   recommendationReason?: true
   tagsJson?: true
   createdAt?: true
@@ -274,6 +280,7 @@ export type TrendingRepoGroupByOutputType = {
   forks: number
   starsToday: number
   summary: string | null
+  readmeSummary: string | null
   recommendationReason: string | null
   tagsJson: runtime.JsonValue
   createdAt: Date
@@ -317,6 +324,7 @@ export type TrendingRepoWhereInput = {
   forks?: Prisma.IntFilter<"TrendingRepo"> | number
   starsToday?: Prisma.IntFilter<"TrendingRepo"> | number
   summary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
+  readmeSummary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   recommendationReason?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   tagsJson?: Prisma.JsonFilter<"TrendingRepo">
   createdAt?: Prisma.DateTimeFilter<"TrendingRepo"> | Date | string
@@ -338,6 +346,7 @@ export type TrendingRepoOrderByWithRelationInput = {
   forks?: Prisma.SortOrder
   starsToday?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
+  readmeSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   recommendationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   tagsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -362,6 +371,7 @@ export type TrendingRepoWhereUniqueInput = Prisma.AtLeast<{
   forks?: Prisma.IntFilter<"TrendingRepo"> | number
   starsToday?: Prisma.IntFilter<"TrendingRepo"> | number
   summary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
+  readmeSummary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   recommendationReason?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   tagsJson?: Prisma.JsonFilter<"TrendingRepo">
   createdAt?: Prisma.DateTimeFilter<"TrendingRepo"> | Date | string
@@ -383,6 +393,7 @@ export type TrendingRepoOrderByWithAggregationInput = {
   forks?: Prisma.SortOrder
   starsToday?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
+  readmeSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   recommendationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   tagsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -411,6 +422,7 @@ export type TrendingRepoScalarWhereWithAggregatesInput = {
   forks?: Prisma.IntWithAggregatesFilter<"TrendingRepo"> | number
   starsToday?: Prisma.IntWithAggregatesFilter<"TrendingRepo"> | number
   summary?: Prisma.StringNullableWithAggregatesFilter<"TrendingRepo"> | string | null
+  readmeSummary?: Prisma.StringNullableWithAggregatesFilter<"TrendingRepo"> | string | null
   recommendationReason?: Prisma.StringNullableWithAggregatesFilter<"TrendingRepo"> | string | null
   tagsJson?: Prisma.JsonWithAggregatesFilter<"TrendingRepo">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TrendingRepo"> | Date | string
@@ -430,6 +442,7 @@ export type TrendingRepoCreateInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -451,6 +464,7 @@ export type TrendingRepoUncheckedCreateInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -470,6 +484,7 @@ export type TrendingRepoUpdateInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -491,6 +506,7 @@ export type TrendingRepoUncheckedUpdateInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -511,6 +527,7 @@ export type TrendingRepoCreateManyInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -530,6 +547,7 @@ export type TrendingRepoUpdateManyMutationInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -550,6 +568,7 @@ export type TrendingRepoUncheckedUpdateManyInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -580,6 +599,7 @@ export type TrendingRepoCountOrderByAggregateInput = {
   forks?: Prisma.SortOrder
   starsToday?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  readmeSummary?: Prisma.SortOrder
   recommendationReason?: Prisma.SortOrder
   tagsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -607,6 +627,7 @@ export type TrendingRepoMaxOrderByAggregateInput = {
   forks?: Prisma.SortOrder
   starsToday?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  readmeSummary?: Prisma.SortOrder
   recommendationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -626,6 +647,7 @@ export type TrendingRepoMinOrderByAggregateInput = {
   forks?: Prisma.SortOrder
   starsToday?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  readmeSummary?: Prisma.SortOrder
   recommendationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -705,6 +727,7 @@ export type TrendingRepoCreateWithoutSnapshotInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -724,6 +747,7 @@ export type TrendingRepoUncheckedCreateWithoutSnapshotInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -773,6 +797,7 @@ export type TrendingRepoScalarWhereInput = {
   forks?: Prisma.IntFilter<"TrendingRepo"> | number
   starsToday?: Prisma.IntFilter<"TrendingRepo"> | number
   summary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
+  readmeSummary?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   recommendationReason?: Prisma.StringNullableFilter<"TrendingRepo"> | string | null
   tagsJson?: Prisma.JsonFilter<"TrendingRepo">
   createdAt?: Prisma.DateTimeFilter<"TrendingRepo"> | Date | string
@@ -792,6 +817,7 @@ export type TrendingRepoCreateManySnapshotInput = {
   forks?: number
   starsToday?: number
   summary?: string | null
+  readmeSummary?: string | null
   recommendationReason?: string | null
   tagsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -811,6 +837,7 @@ export type TrendingRepoUpdateWithoutSnapshotInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -830,6 +857,7 @@ export type TrendingRepoUncheckedUpdateWithoutSnapshotInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -849,6 +877,7 @@ export type TrendingRepoUncheckedUpdateManyWithoutSnapshotInput = {
   forks?: Prisma.IntFieldUpdateOperationsInput | number
   starsToday?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readmeSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recommendationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -871,6 +900,7 @@ export type TrendingRepoSelect<ExtArgs extends runtime.Types.Extensions.Internal
   forks?: boolean
   starsToday?: boolean
   summary?: boolean
+  readmeSummary?: boolean
   recommendationReason?: boolean
   tagsJson?: boolean
   createdAt?: boolean
@@ -892,6 +922,7 @@ export type TrendingRepoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   forks?: boolean
   starsToday?: boolean
   summary?: boolean
+  readmeSummary?: boolean
   recommendationReason?: boolean
   tagsJson?: boolean
   createdAt?: boolean
@@ -913,6 +944,7 @@ export type TrendingRepoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   forks?: boolean
   starsToday?: boolean
   summary?: boolean
+  readmeSummary?: boolean
   recommendationReason?: boolean
   tagsJson?: boolean
   createdAt?: boolean
@@ -934,12 +966,13 @@ export type TrendingRepoSelectScalar = {
   forks?: boolean
   starsToday?: boolean
   summary?: boolean
+  readmeSummary?: boolean
   recommendationReason?: boolean
   tagsJson?: boolean
   createdAt?: boolean
 }
 
-export type TrendingRepoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "snapshotId" | "rank" | "owner" | "name" | "repoFullName" | "url" | "description" | "language" | "languageColor" | "stars" | "forks" | "starsToday" | "summary" | "recommendationReason" | "tagsJson" | "createdAt", ExtArgs["result"]["trendingRepo"]>
+export type TrendingRepoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "snapshotId" | "rank" | "owner" | "name" | "repoFullName" | "url" | "description" | "language" | "languageColor" | "stars" | "forks" | "starsToday" | "summary" | "readmeSummary" | "recommendationReason" | "tagsJson" | "createdAt", ExtArgs["result"]["trendingRepo"]>
 export type TrendingRepoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   snapshot?: boolean | Prisma.TrendingSnapshotDefaultArgs<ExtArgs>
 }
@@ -970,6 +1003,7 @@ export type $TrendingRepoPayload<ExtArgs extends runtime.Types.Extensions.Intern
     forks: number
     starsToday: number
     summary: string | null
+    readmeSummary: string | null
     recommendationReason: string | null
     tagsJson: runtime.JsonValue
     createdAt: Date
@@ -1411,6 +1445,7 @@ export interface TrendingRepoFieldRefs {
   readonly forks: Prisma.FieldRef<"TrendingRepo", 'Int'>
   readonly starsToday: Prisma.FieldRef<"TrendingRepo", 'Int'>
   readonly summary: Prisma.FieldRef<"TrendingRepo", 'String'>
+  readonly readmeSummary: Prisma.FieldRef<"TrendingRepo", 'String'>
   readonly recommendationReason: Prisma.FieldRef<"TrendingRepo", 'String'>
   readonly tagsJson: Prisma.FieldRef<"TrendingRepo", 'Json'>
   readonly createdAt: Prisma.FieldRef<"TrendingRepo", 'DateTime'>

@@ -35,6 +35,13 @@ export async function GET(request: NextRequest) {
       forks: repo.forks,
       starsToday: repo.starsToday,
     }));
+    const responseRepos = snapshot.repos.map((repo) => ({
+      ...repo,
+      summary: repo.summary,
+      readmeSummary: repo.readmeSummary,
+      recommendationReason: repo.recommendationReason,
+      tagsJson: repo.tagsJson,
+    }));
 
     return NextResponse.json({
       snapshot: {
@@ -47,7 +54,7 @@ export async function GET(request: NextRequest) {
         createdAt: snapshot.createdAt,
         updatedAt: snapshot.updatedAt,
       },
-      repos: snapshot.repos,
+      repos: responseRepos,
       metrics: computeMetrics(repos),
     });
   } catch (error) {
