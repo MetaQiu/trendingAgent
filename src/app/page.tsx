@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
 import { RepoCard } from "@/components/RepoCard";
 import { SummaryPanel } from "@/components/SummaryPanel";
+import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
 import { prisma } from "@/lib/db";
 import { computeMetrics } from "@/lib/metrics";
 import type { TrendingRepoItem } from "@/types/trending";
@@ -24,7 +25,10 @@ export default async function Home() {
       <main className="mx-auto max-w-5xl px-6 py-16">
         <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
           <h1 className="text-4xl font-bold">GitHub Trending 智能总结</h1>
-          <p className="mt-4 text-slate-600">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，调用 /api/cron/update-trending 生成第一份总结。</p>
+          <p className="mt-4 text-slate-600">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
+        </div>
+        <div className="mt-6">
+          <UpdateTrendingButton />
         </div>
       </main>
     );
@@ -47,6 +51,7 @@ export default async function Home() {
       </header>
 
       <DateSelector dates={dates} />
+      <UpdateTrendingButton />
       <SummaryPanel summary={snapshot.summary} metrics={metrics} />
 
       <section className="space-y-4">
