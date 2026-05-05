@@ -29,7 +29,10 @@ export default async function DashboardPage() {
           <p className="text-sm text-blue-600">{snapshot.date.toISOString().slice(0, 10)}</p>
           <h1 className="text-3xl font-bold">趋势仪表盘</h1>
         </div>
-        <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href="/">返回首页</Link>
+        <nav className="flex flex-wrap gap-3">
+          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+          <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href="/">返回首页</Link>
+        </nav>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-2">

@@ -14,8 +14,8 @@ import type { DailyTrendingSummary, RepoReadmeSummaryResult, TrendingSince } fro
 export type TrendingUpdateTrigger = "cron" | "manual" | "script";
 
 const REPO_LLM_CONCURRENCY = Number(process.env.REPO_LLM_CONCURRENCY || 5);
-const REPO_LLM_TIMEOUT_MS = Number(process.env.REPO_LLM_TIMEOUT_MS || 7000);
-const DAILY_SUMMARY_TIMEOUT_MS = Number(process.env.DAILY_SUMMARY_TIMEOUT_MS || 6000);
+const REPO_LLM_TIMEOUT_MS = Number(process.env.REPO_LLM_TIMEOUT_MS || 12000);
+const DAILY_SUMMARY_TIMEOUT_MS = Number(process.env.DAILY_SUMMARY_TIMEOUT_MS || 10000);
 
 export class TrendingUpdateAlreadyRunningError extends Error {
   statusCode = 409;

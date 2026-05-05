@@ -46,14 +46,19 @@ function isPossiblyTimedOut(run: TrendingUpdateRunListItem) {
 }
 
 export function TrendingUpdateRunsPanel({ runs }: TrendingUpdateRunsPanelProps) {
+  const latestRun = runs[0];
+
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center justify-between gap-4">
+    <details className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold">最近运行日志</h2>
-          <p className="mt-1 text-sm text-slate-600">记录 cron、手动和脚本触发的更新结果。</p>
+          <p className="mt-1 text-sm text-slate-600">
+            {latestRun ? `${statusLabels[latestRun.status] ?? latestRun.status} · ${latestRun.message || latestRun.errorMessage || "无消息"}` : "暂无运行日志。"}
+          </p>
         </div>
-      </div>
+        <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 transition group-open:rotate-180">⌄</span>
+      </summary>
 
       {runs.length === 0 ? (
         <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">暂无运行日志。</p>
@@ -95,6 +100,6 @@ export function TrendingUpdateRunsPanel({ runs }: TrendingUpdateRunsPanelProps) 
           ))}
         </div>
       )}
-    </section>
+    </details>
   );
 }
