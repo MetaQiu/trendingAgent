@@ -9,7 +9,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="mx-auto max-w-6xl px-6 py-8 text-center text-sm text-slate-500">
+          made with <span className="text-rose-500">❤</span> by{" "}
+          <a className="font-medium text-slate-700 underline underline-offset-4 hover:text-blue-600" href="https://metaqiu.cn/" target="_blank" rel="noreferrer">
+            MetaQiu
+          </a>
+        </footer>
+      </body>
     </html>
   );
 }

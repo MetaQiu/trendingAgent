@@ -15,7 +15,7 @@ export type TrendingUpdateTrigger = "cron" | "manual" | "script";
 
 const REPO_LLM_CONCURRENCY = Number(process.env.REPO_LLM_CONCURRENCY || 5);
 const REPO_LLM_TIMEOUT_MS = Number(process.env.REPO_LLM_TIMEOUT_MS || 12000);
-const DAILY_SUMMARY_TIMEOUT_MS = Number(process.env.DAILY_SUMMARY_TIMEOUT_MS || 20000);
+const DAILY_SUMMARY_TIMEOUT_MS = Number(process.env.DAILY_SUMMARY_TIMEOUT_MS || 30000);
 
 export class TrendingUpdateAlreadyRunningError extends Error {
   statusCode = 409;
@@ -288,7 +288,8 @@ export async function runTrendingAgentWithLog(options?: {
     const repoLlmSuccess = results.reduce((sum, item) => sum + item.repoLlm.success, 0);
     const repoLlmFallback = results.reduce((sum, item) => sum + item.repoLlm.fallback, 0);
     const dailyLlmFallback = results.filter((item) => item.fallback).length;
-    const message = `更新成功，共写入 ${repoCount} 个仓库，生成 ${snapshotCount} 个快照；单仓库 LLM 成功 ${repoLlmSuccess} 个，降级 ${repoLlmFallback} 个；日报聚合 ${dailyLlmFallback === 0 ? "成功" : `降级 ${dailyLlmFallback} 个`}。`;
+    const dailyLlmErrors = results.map((item) => item.error).filter(Boolean);
+    const message = `更新成功，共写入 ${repoCount} 个仓库，生成 ${snapshotCount} 个快照；单仓库 LLM 成功 ${repoLlmSuccess} 个，降级 ${repoLlmFallback} 个；日报聚合 ${dailyLlmFallback === 0 ? "成功" : `降级 ${dailyLlmFallback} 个：${dailyLlmErrors.join("；") || "未知错误"}`}。`;
     const updatedRun = await prisma.trendingUpdateRun.update({
       where: { id: run.id },
       data: {

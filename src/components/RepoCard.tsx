@@ -33,10 +33,22 @@ export function RepoCard({ repo }: RepoCardProps) {
           ) : null}
           {repo.recommendationReason ? <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">{repo.recommendationReason}</p> : null}
         </div>
-        <div className="grid min-w-48 grid-cols-3 gap-2 text-center text-sm">
-          <span className="rounded-xl bg-slate-100 px-3 py-2">★ {repo.stars.toLocaleString()}</span>
-          <span className="rounded-xl bg-slate-100 px-3 py-2">Fork {repo.forks.toLocaleString()}</span>
-          <span className="rounded-xl bg-green-100 px-3 py-2 text-green-800">+{repo.starsToday}</span>
+        <div className="grid min-w-60 grid-cols-3 gap-3 text-center text-xs">
+          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 px-3 py-3 shadow-sm">
+            <p className="text-base font-semibold text-slate-950">★</p>
+            <p className="mt-1 font-mono text-sm font-semibold text-slate-900">{repo.stars.toLocaleString()}</p>
+            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-slate-500">Stars</p>
+          </div>
+          <div className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-white to-indigo-50 px-3 py-3 shadow-sm">
+            <p className="text-base font-semibold text-indigo-700">⑂</p>
+            <p className="mt-1 font-mono text-sm font-semibold text-slate-900">{repo.forks.toLocaleString()}</p>
+            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-slate-500">Forks</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-100 px-3 py-3 shadow-sm">
+            <p className="text-base font-bold text-emerald-700">+{repo.starsToday.toLocaleString()}</p>
+            <p className="mt-1 font-semibold text-emerald-900">今日新增</p>
+            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-emerald-600">Stars</p>
+          </div>
         </div>
       </div>
       <div className="mt-4 flex items-center gap-2 text-sm text-slate-500">
