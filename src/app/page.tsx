@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
-import { FloatingBackToLeaderboard } from "@/components/FloatingBackToLeaderboard";
 import { LanguageChart } from "@/components/LanguageChart";
 import { RepoCard } from "@/components/RepoCard";
+import { SideNavigation } from "@/components/SideNavigation";
 import { StarsChart } from "@/components/StarsChart";
 import { SummaryPanel } from "@/components/SummaryPanel";
 import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderboard";
@@ -76,18 +76,23 @@ export default async function Home() {
 
   return (
     <main className="lp-shell space-y-6">
+      <SideNavigation
+        observedDate={snapshot.date.toISOString().slice(0, 10)}
+        dateDetailHref={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}
+        runs={runs}
+      />
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 overflow-x-auto pb-1">
           <p className="lp-eyebrow">TrendingAgent</p>
-          <h1 className="mt-2 text-[clamp(32px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
+          <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
           <p className="mt-3 max-w-xl lp-muted">自动抓取、中文总结和趋势可视化。</p>
         </div>
-        <nav className="flex flex-wrap items-center gap-3">
+        <nav className="flex flex-wrap items-center gap-3 lg:hidden">
+          <TopUtilityMenu runs={runs} />
           <span className="lp-chip inline-flex items-baseline gap-2 px-4 py-2 font-mono text-sm">
             <span className="text-[11px] uppercase tracking-[0.16em] lp-muted">Observed</span>
             <strong>{snapshot.date.toISOString().slice(0, 10)}</strong>
           </span>
-          <TopUtilityMenu runs={runs} />
           <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           <Link className="lp-chip px-5 py-2 font-semibold" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
@@ -96,7 +101,7 @@ export default async function Home() {
       <DateSelector dates={dates} currentDate={snapshot.date.toISOString().slice(0, 10)} />
       <TopRepositoriesLeaderboard repos={snapshot.repos} />
       {metrics ? (
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section id="charts" className="grid scroll-mt-8 gap-6 lg:grid-cols-2">
           <LanguageChart data={metrics.languageDistribution} />
           <StarsChart title="今日新增 Stars Top 10" data={metrics.starsTodayTop} dataKey="starsToday" />
           <div className="lg:col-span-2">
@@ -104,9 +109,11 @@ export default async function Home() {
           </div>
         </section>
       ) : null}
-      <SummaryPanel summary={snapshot.summary} />
+      <div id="summary" className="scroll-mt-8">
+        <SummaryPanel summary={snapshot.summary} />
+      </div>
 
-      <section className="space-y-4">
+      <section id="repo-details" className="scroll-mt-8 space-y-4">
         <div>
           <p className="lp-eyebrow">Repositories</p>
           <h2 className="mt-1 text-xl font-semibold lp-ink">Trending 仓库</h2>
@@ -115,7 +122,6 @@ export default async function Home() {
           {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
         </div>
       </section>
-      <FloatingBackToLeaderboard />
     </main>
   );
 }
