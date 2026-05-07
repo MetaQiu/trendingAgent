@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
+import { FloatingBackToLeaderboard } from "@/components/FloatingBackToLeaderboard";
 import { LanguageChart } from "@/components/LanguageChart";
-import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
 import { RepoCard } from "@/components/RepoCard";
 import { StarsChart } from "@/components/StarsChart";
 import { SummaryPanel } from "@/components/SummaryPanel";
 import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderboard";
-import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
-import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
+import { TopUtilityMenu } from "@/components/TopUtilityMenu";
+import type { TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { prisma } from "@/lib/db";
 import { computeMetrics } from "@/lib/metrics";
 import type { TrendingRepoItem } from "@/types/trending";
@@ -62,19 +62,13 @@ export default async function Home() {
     return (
       <main className="lp-shell">
         <div className="lp-card p-10 text-center">
-          <div className="flex justify-end">
+          <div className="flex flex-wrap justify-end gap-3">
+            <TopUtilityMenu runs={runs} />
             <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           </div>
           <p className="lp-eyebrow mt-6">TrendingAgent</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight lp-ink">GitHub Trending 智能总结</h1>
           <p className="mx-auto mt-4 max-w-2xl lp-muted">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
-        </div>
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
-          <UpdateTrendingButton />
-          <NextTrendingCountdown />
-        </div>
-        <div className="mt-6">
-          <TrendingUpdateRunsPanel runs={runs} />
         </div>
       </main>
     );
@@ -93,6 +87,7 @@ export default async function Home() {
             <span className="text-[11px] uppercase tracking-[0.16em] lp-muted">Observed</span>
             <strong>{snapshot.date.toISOString().slice(0, 10)}</strong>
           </span>
+          <TopUtilityMenu runs={runs} />
           <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           <Link className="lp-chip px-5 py-2 font-semibold" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
@@ -110,11 +105,6 @@ export default async function Home() {
         </section>
       ) : null}
       <SummaryPanel summary={snapshot.summary} />
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-        <UpdateTrendingButton />
-        <NextTrendingCountdown />
-      </div>
-      <TrendingUpdateRunsPanel runs={runs} />
 
       <section className="space-y-4">
         <div>
@@ -125,6 +115,7 @@ export default async function Home() {
           {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
         </div>
       </section>
+      <FloatingBackToLeaderboard />
     </main>
   );
 }

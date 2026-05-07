@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
+import { FloatingBackToLeaderboard } from "@/components/FloatingBackToLeaderboard";
 import { RepoCard } from "@/components/RepoCard";
 import { SummaryPanel } from "@/components/SummaryPanel";
 import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderboard";
@@ -53,6 +54,7 @@ export default async function TrendingDatePage({ params }: { params: Promise<{ d
         </div>
         {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
       </section>
+      <FloatingBackToLeaderboard />
     </main>
   );
 }

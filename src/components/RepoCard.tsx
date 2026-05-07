@@ -72,14 +72,9 @@ export function RepoCard({ repo }: RepoCardProps) {
         </div>
       ) : null}
 
-      <div className="mt-5 flex flex-col gap-3 border-t border-[var(--border)] pt-4 text-sm lp-muted sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
-          <span>{repo.language || "Unknown"}</span>
-        </div>
-        <a className="lp-chip self-start px-3 py-1.5 text-xs font-semibold sm:self-auto" href="#top-repositories">
-          返回排行榜 ↑
-        </a>
+      <div className="mt-5 flex items-center gap-2 border-t border-[var(--border)] pt-4 text-sm lp-muted">
+        {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
+        <span>{repo.language || "Unknown"}</span>
       </div>
     </article>
   );
