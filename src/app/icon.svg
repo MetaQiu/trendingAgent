@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #9b2226; }
+    .fg { fill: #fffaf2; }
+    .dot { fill: #ff8a5c; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #ff8a5c; }
+      .fg { fill: #141a22; }
+      .dot { fill: #fffaf2; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="8" />
+  <path
+    class="fg"
+    d="M8 8.5C8 7.67 8.67 7 9.5 7h13c.83 0 1.5.67 1.5 1.5v1c0 .83-.67 1.5-1.5 1.5H18v12.5c0 .83-.67 1.5-1.5 1.5h-1c-.83 0-1.5-.67-1.5-1.5V11H9.5C8.67 11 8 10.33 8 9.5v-1Z"
+  />
+  <path
+    class="fg"
+    opacity="0.88"
+    d="M10.2 22.7 14.6 15c.58-1 2.02-1 2.6 0l4.4 7.7c.57 1-.15 2.3-1.3 2.3h-.6c-.55 0-1.05-.3-1.31-.78L16 19.8l-2.39 4.42c-.26.48-.76.78-1.31.78h-.8c-1.15 0-1.87-1.3-1.3-2.3Z"
+  />
+  <circle class="dot" cx="23" cy="9" r="2.2" />
+</svg>
