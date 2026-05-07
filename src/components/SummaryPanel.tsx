@@ -1,8 +1,9 @@
 export function SummaryPanel({ summary }: { summary: string }) {
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-3 text-xl font-semibold">今日中文总结</h2>
-      <p className="leading-8 text-slate-700">{summary}</p>
+    <section className="lp-card p-6">
+      <p className="lp-eyebrow">Daily Brief</p>
+      <h2 className="mt-2 text-xl font-semibold lp-ink">今日中文总结</h2>
+      <p className="mt-4 max-w-4xl leading-8 lp-muted">{summary}</p>
     </section>
   );
 }

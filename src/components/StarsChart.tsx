@@ -12,15 +12,16 @@ export function StarsChart({
   dataKey: string;
 }) {
   return (
-    <div className="h-96 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h2 className="mb-4 text-lg font-semibold">{title}</h2>
-      <ResponsiveContainer width="100%" height="85%">
+    <div className="lp-card h-96 p-5">
+      <p className="lp-eyebrow">Ranking</p>
+      <h2 className="mt-2 mb-4 text-lg font-semibold lp-ink">{title}</h2>
+      <ResponsiveContainer width="100%" height="80%">
         <BarChart data={data} layout="vertical" margin={{ left: 80 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" />
-          <YAxis type="category" dataKey="repoFullName" width={140} tick={{ fontSize: 12 }} />
-          <Tooltip />
-          <Bar dataKey={dataKey} fill="#16a34a" radius={[0, 8, 8, 0]} />
+          <CartesianGrid stroke="var(--grid-line)" strokeDasharray="3 3" />
+          <XAxis type="number" tick={{ fill: "var(--ink-muted)", fontSize: 12 }} axisLine={{ stroke: "var(--border)" }} tickLine={false} />
+          <YAxis type="category" dataKey="repoFullName" width={140} tick={{ fill: "var(--ink-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
+          <Tooltip contentStyle={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 12, boxShadow: "var(--shadow)" }} />
+          <Bar dataKey={dataKey} fill="var(--accent)" radius={[0, 8, 8, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

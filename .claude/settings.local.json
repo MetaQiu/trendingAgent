@@ -8,7 +8,10 @@
       "Skill(claude-api)",
       "Bash(npm run:*)",
       "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/trendingagent\" npm run build)",
-      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/trendingagent\" npm run prisma:generate)"
+      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/trendingagent\" npm run prisma:generate)",
+      "mcp__fetch__fetch",
+      "mcp__exa__web_fetch_exa",
+      "Bash(gh api:*)"
     ]
   }
 }

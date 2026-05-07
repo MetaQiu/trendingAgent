@@ -11,9 +11,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="zh-CN">
       <body>
         {children}
-        <footer className="mx-auto max-w-6xl px-6 py-8 text-center text-sm font-medium uppercase tracking-wide text-slate-500">
-          MADE WITH <span className="text-rose-500">❤</span> BY{" "}
-          <a className="font-semibold text-slate-700 underline underline-offset-4 hover:text-blue-600" href="https://metaqiu.cn/" target="_blank" rel="noreferrer">
+        <footer className="mx-auto max-w-[1180px] px-6 py-8 text-center text-sm font-medium uppercase tracking-[0.18em] lp-muted">
+          MADE WITH <span className="text-[var(--accent)]">❤</span> BY{" "}
+          <a className="font-semibold text-[var(--ink)] underline underline-offset-4 hover:text-[var(--accent)]" href="https://metaqiu.cn/" target="_blank" rel="noreferrer">
             METAQIU
           </a>
         </footer>

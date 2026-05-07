@@ -15,48 +15,62 @@ type RepoCardProps = {
   };
 };
 
+function StatPill({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "neutral" | "accent" | "positive" }) {
+  const toneClass = tone === "positive"
+    ? "text-[var(--positive)]"
+    : tone === "accent"
+      ? "text-[var(--accent)]"
+      : "text-[var(--ink)]";
+
+  return (
+    <div className="lp-chip px-3 py-2 text-right font-variant-numeric tabular-nums">
+      <p className={`font-mono text-sm font-semibold ${toneClass}`}>{value}</p>
+      <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] lp-muted">{label}</p>
+    </div>
+  );
+}
+
 export function RepoCard({ repo }: RepoCardProps) {
   return (
-    <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-blue-600">#{repo.rank}</p>
-            <a className="mt-1 block text-2xl font-bold tracking-tight text-slate-950 hover:text-blue-600" href={repo.url} target="_blank" rel="noreferrer">
+    <article className="lp-card overflow-hidden p-5 transition hover:-translate-y-0.5 hover:border-[var(--accent)]">
+      <div className="grid gap-5 lg:grid-cols-[44px_1fr_auto] lg:items-start">
+        <p className="font-mono text-sm font-semibold lp-muted">#{repo.rank}</p>
+
+        <div className="min-w-0">
+          <div className="flex items-center gap-3">
+            {repo.languageColor ? <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
+            <a className="truncate text-xl font-bold tracking-tight lp-ink hover:text-[var(--accent)]" href={repo.url} target="_blank" rel="noreferrer">
               {repo.repoFullName}
             </a>
-            <p className="mt-3 max-w-4xl text-base leading-7 text-slate-600">{repo.summary || repo.description || "暂无描述"}</p>
           </div>
-
-          <div className="grid w-full grid-cols-3 gap-2 sm:max-w-md lg:w-[300px] lg:shrink-0">
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 px-3 py-3 text-center shadow-sm">
-              <p className="text-base font-semibold text-slate-950">★</p>
-              <p className="mt-1 font-mono text-sm font-semibold text-slate-900">{repo.stars.toLocaleString()}</p>
-              <p className="mt-0.5 text-[11px] uppercase tracking-wide text-slate-500">Stars</p>
-            </div>
-            <div className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-white to-indigo-50 px-3 py-3 text-center shadow-sm">
-              <p className="text-base font-semibold text-indigo-700">⑂</p>
-              <p className="mt-1 font-mono text-sm font-semibold text-slate-900">{repo.forks.toLocaleString()}</p>
-              <p className="mt-0.5 text-[11px] uppercase tracking-wide text-slate-500">Forks</p>
-            </div>
-            <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-100 px-3 py-3 text-center shadow-sm">
-              <p className="text-base font-bold text-emerald-700">+{repo.starsToday.toLocaleString()}</p>
-              <p className="mt-1 whitespace-nowrap text-[13px] font-semibold text-emerald-900">今日新增</p>
-              <p className="mt-0.5 text-[11px] uppercase tracking-wide text-emerald-600">Stars</p>
-            </div>
-          </div>
+          <p className="mt-3 max-w-4xl text-base leading-7 lp-muted">{repo.summary || repo.description || "暂无描述"}</p>
         </div>
 
-        {repo.readmeSummary ? (
-          <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-4 text-sm text-blue-900">
-            <p className="font-semibold">README 精读</p>
-            <p className="mt-2 leading-7">{repo.readmeSummary}</p>
-          </div>
-        ) : null}
-        {repo.recommendationReason ? <p className="rounded-2xl border border-amber-100 bg-amber-50 p-4 text-sm leading-7 text-amber-800">{repo.recommendationReason}</p> : null}
+        <div className="grid min-w-0 grid-cols-3 gap-2 sm:min-w-[310px]">
+          <StatPill label="Stars" value={repo.stars.toLocaleString()} />
+          <StatPill label="Forks" value={repo.forks.toLocaleString()} tone="accent" />
+          <StatPill label="Today" value={`+${repo.starsToday.toLocaleString()}`} tone="positive" />
+        </div>
       </div>
 
-      <div className="mt-5 flex items-center gap-2 border-t border-slate-100 pt-4 text-sm text-slate-500">
+      {(repo.readmeSummary || repo.recommendationReason) ? (
+        <div className="mt-5 grid gap-3 lg:grid-cols-[1.2fr_0.8fr]">
+          {repo.readmeSummary ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--chip-bg)] p-4 text-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">README 精读</p>
+              <p className="mt-2 leading-7 lp-ink">{repo.readmeSummary}</p>
+            </div>
+          ) : null}
+          {repo.recommendationReason ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--accent)_8%,transparent)] p-4 text-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">推荐理由</p>
+              <p className="mt-2 leading-7 lp-ink">{repo.recommendationReason}</p>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="mt-5 flex items-center gap-2 border-t border-[var(--border)] pt-4 text-sm lp-muted">
         {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
         <span>{repo.language || "Unknown"}</span>
       </div>

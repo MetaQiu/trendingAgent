@@ -70,14 +70,15 @@ export function UpdateTrendingButton() {
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm">
-      <h2 className="text-xl font-semibold">手动更新 Trending</h2>
-      <p className="mt-2 text-sm leading-6 text-slate-600">
-        输入 Vercel 中配置的 CRON_SECRET 后，可直接从前端触发一次抓取和总结。密钥只会用于本次请求，不会保存到页面。
+    <div className="lp-card p-6 text-left">
+      <p className="lp-eyebrow">Manual Update</p>
+      <h2 className="mt-2 text-xl font-semibold lp-ink">手动更新 Trending</h2>
+      <p className="mt-3 text-sm leading-6 lp-muted">
+        输入 CRON_SECRET 后，可直接从前端触发一次抓取和总结。密钥只会用于本次请求。
       </p>
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <input
-          className="min-w-0 flex-1 rounded-full border border-slate-300 px-4 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-[var(--chip-bg)] px-4 py-2.5 text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:bg-[var(--bg-elev)]"
           type="password"
           value={secret}
           onChange={(event) => setSecret(event.target.value)}
@@ -85,7 +86,7 @@ export function UpdateTrendingButton() {
           autoComplete="off"
         />
         <button
-          className="rounded-full bg-slate-950 px-5 py-2 font-medium text-white disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="rounded-full bg-[var(--accent)] px-5 py-2.5 font-semibold text-[var(--chip-fg-active)] transition hover:bg-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-50"
           type="button"
           onClick={updateTrending}
           disabled={status === "loading"}
@@ -94,7 +95,7 @@ export function UpdateTrendingButton() {
         </button>
       </div>
       {message ? (
-        <p className={`mt-3 text-sm ${status === "error" ? "text-red-600" : status === "success" ? "text-green-700" : "text-slate-600"}`}>
+        <p className={`mt-4 text-sm ${status === "error" ? "text-[var(--negative)]" : status === "success" ? "text-[var(--positive)]" : "lp-muted"}`}>
           {message}
         </p>
       ) : null}

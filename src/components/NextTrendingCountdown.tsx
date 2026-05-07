@@ -31,12 +31,12 @@ export function NextTrendingCountdown() {
   }, []);
 
   return (
-    <div className="rounded-3xl border border-blue-100 bg-blue-50 p-6 text-left shadow-sm">
-      <p className="text-sm font-medium text-blue-700">下次自动更新</p>
-      <p className="mt-2 font-mono text-3xl font-semibold text-slate-950">{formatRemaining(nextRun.getTime() - now.getTime())}</p>
-      <div className="mt-3 space-y-1 text-sm text-slate-600">
-        <p>UTC 时间：{nextRun.toISOString().replace(".000Z", "Z")}</p>
-        <p>本地时间：{nextRun.toLocaleString()}</p>
+    <div className="lp-card p-6 text-left">
+      <p className="lp-eyebrow">Next Run</p>
+      <p className="mt-3 font-mono text-3xl font-semibold lp-ink">{formatRemaining(nextRun.getTime() - now.getTime())}</p>
+      <div className="mt-4 space-y-1 text-sm lp-muted">
+        <p>UTC：{nextRun.toISOString().replace(".000Z", "Z")}</p>
+        <p>本地：{nextRun.toLocaleString()}</p>
       </div>
     </div>
   );

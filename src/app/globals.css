@@ -1,17 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --bg: #f4efe6;
+  --bg-elev: #fffaf2;
+  --panel: rgba(255, 251, 245, 0.88);
+  --ink: #16202a;
+  --ink-muted: #4a5b68;
+  --border: rgba(22, 32, 42, 0.12);
+  --accent: #9b2226;
+  --accent-soft: #ff6b35;
+  --positive: #0f7a3a;
+  --negative: #b4351c;
+  --chip-bg: rgba(22, 32, 42, 0.06);
+  --chip-bg-active: var(--accent);
+  --chip-fg-active: #fffaf2;
+  --grid-line: rgba(22, 32, 42, 0.08);
+  --shadow: 0 24px 80px rgba(22, 32, 42, 0.08);
+  --radius-card: 20px;
+  --radius-chip: 999px;
+  --font-display: "Space Grotesk", "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 0%, rgba(255, 107, 53, 0.12), transparent 55%) var(--bg);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: inherit;
+}
+
+button,
+a,
+summary {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lp-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.lp-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.lp-chip {
+  border-radius: var(--radius-chip);
+  background: var(--chip-bg);
+  border: 1px solid transparent;
+  color: var(--ink);
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.lp-chip:hover {
+  background: var(--border);
+}
+
+.lp-chip-active {
+  background: var(--chip-bg-active);
+  color: var(--chip-fg-active) !important;
+}
+
+.lp-eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.lp-muted {
+  color: var(--ink-muted);
+}
+
+.lp-ink {
+  color: var(--ink);
+}
+
+.lp-border {
+  border-color: var(--border);
+}
+
+@media (max-width: 720px) {
+  .lp-shell {
+    padding: 20px 16px 48px;
+  }
 }

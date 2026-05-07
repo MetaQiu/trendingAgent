@@ -24,22 +24,25 @@ export default async function TrendingDatePage({ params }: { params: Promise<{ d
   }
 
   return (
-    <main className="mx-auto max-w-6xl space-y-8 px-6 py-10">
-      <header className="flex items-center justify-between">
+    <main className="lp-shell space-y-6">
+      <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm text-blue-600">{snapshot.language}/{snapshot.since}</p>
-          <h1 className="text-3xl font-bold">{date} Trending 快照</h1>
+          <p className="lp-eyebrow">{snapshot.language}/{snapshot.since}</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight lp-ink">{date} Trending 快照</h1>
         </div>
         <nav className="flex flex-wrap gap-3">
-          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
-          <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href="/">返回首页</Link>
+          <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+          <Link className="lp-chip px-5 py-2 font-semibold" href="/">返回首页</Link>
         </nav>
       </header>
 
       <SummaryPanel summary={snapshot.summary} />
       <TrendingTable repos={snapshot.repos} />
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">仓库详情</h2>
+        <div>
+          <p className="lp-eyebrow">Details</p>
+          <h2 className="mt-1 text-xl font-semibold lp-ink">仓库详情</h2>
+        </div>
         {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
       </section>
     </main>

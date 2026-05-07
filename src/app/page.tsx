@@ -50,13 +50,14 @@ export default async function Home() {
 
   if (!snapshot) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-16">
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
+      <main className="lp-shell">
+        <div className="lp-card p-10 text-center">
           <div className="flex justify-end">
-            <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+            <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
           </div>
-          <h1 className="mt-6 text-4xl font-bold">GitHub Trending 智能总结</h1>
-          <p className="mt-4 text-slate-600">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
+          <p className="lp-eyebrow mt-6">TrendingAgent</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight lp-ink">GitHub Trending 智能总结</h1>
+          <p className="mx-auto mt-4 max-w-2xl lp-muted">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
         </div>
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
           <UpdateTrendingButton />
@@ -70,17 +71,21 @@ export default async function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
-      <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-sm font-medium text-blue-600">{snapshot.date.toISOString().slice(0, 10)} · {snapshot.language}/{snapshot.since}</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">GitHub Trending 智能总结</h1>
-          <p className="mt-3 text-slate-600">自动抓取、中文总结和趋势可视化。</p>
+    <main className="lp-shell space-y-6">
+      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="lp-eyebrow">TrendingAgent</p>
+          <h1 className="mt-2 text-[clamp(32px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
+          <p className="mt-3 max-w-xl lp-muted">自动抓取、中文总结和趋势可视化。</p>
         </div>
-        <nav className="flex flex-wrap gap-3">
-          <a className="rounded-full border border-slate-900 bg-slate-950 px-5 py-2 font-medium text-white! shadow-sm hover:bg-slate-800" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
-          <Link className="rounded-full border border-emerald-200 bg-emerald-500 px-5 py-2 font-medium text-white! shadow-sm hover:bg-emerald-600" href="/dashboard">仪表盘</Link>
-          <Link className="rounded-full border border-slate-200 bg-white px-5 py-2" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
+        <nav className="flex flex-wrap items-center gap-3">
+          <span className="lp-chip inline-flex items-baseline gap-2 px-4 py-2 font-mono text-sm">
+            <span className="text-[11px] uppercase tracking-[0.16em] lp-muted">Observed</span>
+            <strong>{snapshot.date.toISOString().slice(0, 10)}</strong>
+          </span>
+          <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
+          <Link className="lp-chip lp-chip-active px-5 py-2 font-semibold" href="/dashboard">仪表盘</Link>
+          <Link className="lp-chip px-5 py-2 font-semibold" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
       </header>
 
@@ -93,7 +98,10 @@ export default async function Home() {
       <SummaryPanel summary={snapshot.summary} />
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Trending 仓库</h2>
+        <div>
+          <p className="lp-eyebrow">Repositories</p>
+          <h2 className="mt-1 text-xl font-semibold lp-ink">Trending 仓库</h2>
+        </div>
         <div className="space-y-4">
           {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
         </div>
