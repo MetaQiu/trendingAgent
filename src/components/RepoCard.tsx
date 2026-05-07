@@ -1,3 +1,5 @@
+import { getRepoAnchorId } from "@/lib/repoAnchor";
+
 type RepoCardProps = {
   repo: {
     rank: number;
@@ -32,7 +34,7 @@ function StatPill({ label, value, tone = "neutral" }: { label: string; value: st
 
 export function RepoCard({ repo }: RepoCardProps) {
   return (
-    <article className="lp-card overflow-hidden p-5 transition hover:-translate-y-0.5 hover:border-[var(--accent)]">
+    <article id={getRepoAnchorId(repo.repoFullName)} className="lp-card scroll-mt-8 overflow-hidden p-5 transition hover:-translate-y-0.5 hover:border-[var(--accent)]">
       <div className="grid gap-5 lg:grid-cols-[44px_1fr_auto] lg:items-start">
         <p className="font-mono text-sm font-semibold lp-muted">#{repo.rank}</p>
 
@@ -70,9 +72,14 @@ export function RepoCard({ repo }: RepoCardProps) {
         </div>
       ) : null}
 
-      <div className="mt-5 flex items-center gap-2 border-t border-[var(--border)] pt-4 text-sm lp-muted">
-        {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
-        <span>{repo.language || "Unknown"}</span>
+      <div className="mt-5 flex flex-col gap-3 border-t border-[var(--border)] pt-4 text-sm lp-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
+          <span>{repo.language || "Unknown"}</span>
+        </div>
+        <a className="lp-chip self-start px-3 py-1.5 text-xs font-semibold sm:self-auto" href="#top-repositories">
+          返回排行榜 ↑
+        </a>
       </div>
     </article>
   );
