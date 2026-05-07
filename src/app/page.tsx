@@ -76,18 +76,14 @@ export default async function Home() {
 
   return (
     <main className="lp-shell space-y-6">
-      <SideNavigation
-        observedDate={snapshot.date.toISOString().slice(0, 10)}
-        dateDetailHref={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}
-        runs={runs}
-      />
+      <SideNavigation />
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0 flex-1 overflow-x-auto pb-1">
           <p className="lp-eyebrow">TrendingAgent</p>
           <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
           <p className="mt-3 max-w-xl lp-muted">自动抓取、中文总结和趋势可视化。</p>
         </div>
-        <nav className="flex flex-wrap items-center gap-3 lg:hidden">
+        <nav className="flex flex-wrap items-center gap-3">
           <TopUtilityMenu runs={runs} />
           <span className="lp-chip inline-flex items-baseline gap-2 px-4 py-2 font-mono text-sm">
             <span className="text-[11px] uppercase tracking-[0.16em] lp-muted">Observed</span>

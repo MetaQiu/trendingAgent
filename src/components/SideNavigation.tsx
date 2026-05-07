@@ -1,64 +1,72 @@
-import Link from "next/link";
-import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
-import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
-import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
+"use client";
 
-function SideDropdown({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <details className="group relative">
-      <summary className="lp-chip block list-none px-3 py-2 text-center text-xs font-semibold hover:text-[var(--accent)]">
-        {label}
-      </summary>
-      <div className="absolute right-[calc(100%+12px)] top-0 z-50 w-[min(92vw,520px)]">
-        {children}
-      </div>
-    </details>
-  );
-}
+import { useEffect, useState } from "react";
 
-function SideAnchor({ href, label }: { href: string; label: string }) {
-  return (
-    <a className="lp-chip block px-3 py-2 text-center text-xs font-semibold hover:text-[var(--accent)]" href={href}>
-      {label}
-    </a>
-  );
-}
+const sections = [
+  { id: "top-repositories", label: "排行" },
+  { id: "charts", label: "图表" },
+  { id: "summary", label: "总结" },
+  { id: "repo-details", label: "仓库" },
+];
 
-export function SideNavigation({
-  observedDate,
-  dateDetailHref,
-  runs,
-}: {
-  observedDate: string;
-  dateDetailHref: string;
-  runs: TrendingUpdateRunListItem[];
-}) {
+export function SideNavigation() {
+  const [activeId, setActiveId] = useState(sections[0].id);
+
+  useEffect(() => {
+    const observers = sections
+      .map((section) => document.getElementById(section.id))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    if (observers.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry?.target.id) {
+          setActiveId(visibleEntry.target.id);
+        }
+      },
+      { rootMargin: "-35% 0px -50% 0px", threshold: [0.1, 0.4, 0.7] },
+    );
+
+    observers.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <aside className="fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-2 lg:flex">
-      <div className="lp-card flex flex-col gap-2 p-2">
-        <span className="lp-chip px-3 py-2 text-center font-mono text-[11px] font-semibold" title={`Observed ${observedDate}`}>
-          {observedDate.slice(5)}
-        </span>
-        <SideAnchor href="#top-repositories" label="排行" />
-        <SideAnchor href="#charts" label="图表" />
-        <SideAnchor href="#summary" label="总结" />
-        <SideAnchor href="#repo-details" label="仓库" />
-        <SideDropdown label="更新">
-          <UpdateTrendingButton />
-        </SideDropdown>
-        <SideDropdown label="下次">
-          <NextTrendingCountdown />
-        </SideDropdown>
-        <SideDropdown label="日志">
-          <TrendingUpdateRunsPanel runs={runs} />
-        </SideDropdown>
-        <a className="lp-chip block px-3 py-2 text-center text-xs font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">
-          GitHub
-        </a>
-        <Link className="lp-chip block px-3 py-2 text-center text-xs font-semibold hover:text-[var(--accent)]" href={dateDetailHref}>
-          详情
-        </Link>
-      </div>
+    <aside className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block" aria-label="页面位置导航">
+      <nav className="relative flex flex-col gap-6 py-3 pl-5 pr-2">
+        <span className="absolute left-[27px] top-4 h-[calc(100%-32px)] w-px bg-[var(--border)]" aria-hidden="true" />
+        {sections.map((section) => {
+          const isActive = activeId === section.id;
+
+          return (
+            <a
+              key={section.id}
+              className="group relative flex items-center gap-3 text-xs font-semibold"
+              href={`#${section.id}`}
+              aria-current={isActive ? "location" : undefined}
+            >
+              <span
+                className={`relative z-10 h-3 w-3 rounded-full border transition ${
+                  isActive
+                    ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_color-mix(in_srgb,var(--accent)_16%,transparent)]"
+                    : "border-[var(--border)] bg-[var(--bg-elev)] group-hover:border-[var(--accent)]"
+                }`}
+              />
+              <span className={`rounded-full px-2 py-1 transition ${isActive ? "bg-[var(--chip-bg)] text-[var(--accent)]" : "lp-muted group-hover:text-[var(--accent)]"}`}>
+                {section.label}
+              </span>
+            </a>
+          );
+        })}
+      </nav>
     </aside>
   );
 }
