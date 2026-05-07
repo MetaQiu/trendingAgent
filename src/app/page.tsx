@@ -89,7 +89,7 @@ export default async function Home() {
         </nav>
       </header>
 
-      <DateSelector dates={dates} />
+      <DateSelector dates={dates} currentDate={snapshot.date.toISOString().slice(0, 10)} />
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <UpdateTrendingButton />
         <NextTrendingCountdown />

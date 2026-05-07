@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DateSelector } from "@/components/DateSelector";
 import { RepoCard } from "@/components/RepoCard";
 import { SummaryPanel } from "@/components/SummaryPanel";
 import { TrendingTable } from "@/components/TrendingTable";
@@ -9,10 +10,14 @@ export const dynamic = "force-dynamic";
 
 export default async function TrendingDatePage({ params }: { params: Promise<{ date: string }> }) {
   const { date } = await params;
-  const snapshot = await prisma.trendingSnapshot.findUnique({
-    where: { date_language_since: { date: parseDateKey(date), language: "all", since: "daily" } },
-    include: { repos: { orderBy: { rank: "asc" } } },
-  });
+  const [snapshot, dateRows] = await Promise.all([
+    prisma.trendingSnapshot.findUnique({
+      where: { date_language_since: { date: parseDateKey(date), language: "all", since: "daily" } },
+      include: { repos: { orderBy: { rank: "asc" } } },
+    }),
+    prisma.trendingSnapshot.findMany({ orderBy: { date: "desc" }, select: { date: true }, take: 20 }),
+  ]);
+  const dates = [...new Set(dateRows.map((row) => row.date.toISOString().slice(0, 10)))];
 
   if (!snapshot) {
     return (
@@ -36,6 +41,7 @@ export default async function TrendingDatePage({ params }: { params: Promise<{ d
         </nav>
       </header>
 
+      <DateSelector dates={dates} currentDate={date} />
       <SummaryPanel summary={snapshot.summary} />
       <TrendingTable repos={snapshot.repos} />
       <section className="space-y-4">
