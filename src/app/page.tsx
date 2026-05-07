@@ -1,13 +1,22 @@
 import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
+import { LanguageChart } from "@/components/LanguageChart";
 import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
 import { RepoCard } from "@/components/RepoCard";
+import { StarsChart } from "@/components/StarsChart";
 import { SummaryPanel } from "@/components/SummaryPanel";
+import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderboard";
 import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
 import { prisma } from "@/lib/db";
+import { computeMetrics } from "@/lib/metrics";
+import type { TrendingRepoItem } from "@/types/trending";
 
 export const dynamic = "force-dynamic";
+
+function toMetricRepos(repos: Array<{ rank: number; owner: string; name: string; repoFullName: string; url: string; description: string | null; language: string | null; languageColor: string | null; stars: number; forks: number; starsToday: number }>): TrendingRepoItem[] {
+  return repos.map((repo) => ({ ...repo }));
+}
 
 function toRunListItem(run: {
   id: string;
@@ -47,6 +56,7 @@ export default async function Home() {
   ]);
   const dates = [...new Set(dateRows.map((row) => row.date.toISOString().slice(0, 10)))];
   const runs = runRows.map(toRunListItem);
+  const metrics = snapshot ? computeMetrics(toMetricRepos(snapshot.repos)) : null;
 
   if (!snapshot) {
     return (
@@ -84,18 +94,27 @@ export default async function Home() {
             <strong>{snapshot.date.toISOString().slice(0, 10)}</strong>
           </span>
           <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
-          <Link className="lp-chip lp-chip-active px-5 py-2 font-semibold" href="/dashboard">仪表盘</Link>
           <Link className="lp-chip px-5 py-2 font-semibold" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
       </header>
 
       <DateSelector dates={dates} currentDate={snapshot.date.toISOString().slice(0, 10)} />
+      <TopRepositoriesLeaderboard repos={snapshot.repos} />
+      {metrics ? (
+        <section className="grid gap-6 lg:grid-cols-2">
+          <LanguageChart data={metrics.languageDistribution} />
+          <StarsChart title="今日新增 Stars Top 10" data={metrics.starsTodayTop} dataKey="starsToday" />
+          <div className="lg:col-span-2">
+            <StarsChart title="总 Stars Top 10" data={metrics.totalStarsTop} dataKey="stars" />
+          </div>
+        </section>
+      ) : null}
+      <SummaryPanel summary={snapshot.summary} />
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <UpdateTrendingButton />
         <NextTrendingCountdown />
       </div>
       <TrendingUpdateRunsPanel runs={runs} />
-      <SummaryPanel summary={snapshot.summary} />
 
       <section className="space-y-4">
         <div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
 import { RepoCard } from "@/components/RepoCard";
 import { SummaryPanel } from "@/components/SummaryPanel";
+import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderboard";
 import { TrendingTable } from "@/components/TrendingTable";
 import { parseDateKey } from "@/lib/date";
 import { prisma } from "@/lib/db";
@@ -42,6 +43,7 @@ export default async function TrendingDatePage({ params }: { params: Promise<{ d
       </header>
 
       <DateSelector dates={dates} currentDate={date} />
+      <TopRepositoriesLeaderboard repos={snapshot.repos} />
       <SummaryPanel summary={snapshot.summary} />
       <TrendingTable repos={snapshot.repos} />
       <section className="space-y-4">
