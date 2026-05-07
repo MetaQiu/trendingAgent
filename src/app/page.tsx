@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { DateSelector } from "@/components/DateSelector";
+import { parseDateKey } from "@/lib/date";
 import { LanguageChart } from "@/components/LanguageChart";
 import { RepoCard } from "@/components/RepoCard";
 import { SideNavigation } from "@/components/SideNavigation";
@@ -48,9 +48,21 @@ function toRunListItem(run: {
   };
 }
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
+  const { date } = await searchParams;
+  const requestedDate = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+  const snapshotQuery = requestedDate
+    ? prisma.trendingSnapshot.findUnique({
+        where: { date_language_since: { date: parseDateKey(requestedDate), language: "all", since: "daily" } },
+        include: { repos: { orderBy: { rank: "asc" } } },
+      })
+    : prisma.trendingSnapshot.findFirst({ orderBy: { date: "desc" }, include: { repos: { orderBy: { rank: "asc" } } } });
   const [snapshot, dateRows, runRows] = await Promise.all([
-    prisma.trendingSnapshot.findFirst({ orderBy: { date: "desc" }, include: { repos: { orderBy: { rank: "asc" } } } }),
+    snapshotQuery,
     prisma.trendingSnapshot.findMany({ orderBy: { date: "desc" }, select: { date: true }, take: 20 }),
     prisma.trendingUpdateRun.findMany({ orderBy: { startedAt: "desc" }, take: 5 }),
   ]);
@@ -90,7 +102,6 @@ export default async function Home() {
             <strong>{snapshot.date.toISOString().slice(0, 10)}</strong>
           </span>
           <a className="lp-chip px-5 py-2 font-semibold hover:text-[var(--accent)]" href="https://github.com/MetaQiu/trendingAgent" target="_blank" rel="noreferrer">GitHub</a>
-          <Link className="lp-chip px-5 py-2 font-semibold" href={`/trending/${snapshot.date.toISOString().slice(0, 10)}`}>日期详情</Link>
         </nav>
       </header>
 

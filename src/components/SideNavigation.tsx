@@ -6,7 +6,6 @@ const sections = [
   { id: "top-repositories", label: "排行" },
   { id: "charts", label: "图表" },
   { id: "summary", label: "总结" },
-  { id: "repo-details", label: "仓库" },
 ];
 
 export function SideNavigation() {
