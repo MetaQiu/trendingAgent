@@ -78,7 +78,7 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
   }
 
   return (
-    <div className="lp-card flex flex-wrap items-center gap-2 p-4">
+    <div className="lp-card relative z-50 flex flex-wrap items-center gap-2 p-4">
       <ArrowButton direction="prev" href={olderDate ? getDateHref(olderDate) : undefined} disabled={!olderDate} />
 
       <details className="group relative">
