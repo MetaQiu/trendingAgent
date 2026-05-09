@@ -2,21 +2,21 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f4efe6;
-  --bg-elev: #fffaf2;
-  --panel: rgba(255, 251, 245, 0.88);
-  --ink: #16202a;
-  --ink-muted: #4a5b68;
-  --border: rgba(22, 32, 42, 0.12);
-  --accent: #9b2226;
-  --accent-soft: #ff6b35;
-  --positive: #0f7a3a;
-  --negative: #b4351c;
-  --chip-bg: rgba(22, 32, 42, 0.06);
-  --chip-bg-active: var(--accent);
-  --chip-fg-active: #fffaf2;
-  --grid-line: rgba(22, 32, 42, 0.08);
-  --shadow: 0 24px 80px rgba(22, 32, 42, 0.08);
+  --bg: #edf6ff;
+  --bg-elev: #fbfdff;
+  --panel: rgba(255, 255, 255, 0.82);
+  --ink: #0b1220;
+  --ink-muted: #526179;
+  --border: rgba(37, 99, 235, 0.15);
+  --accent: #2563eb;
+  --accent-soft: #7c3aed;
+  --positive: #0f8f7a;
+  --negative: #dc2626;
+  --chip-bg: rgba(37, 99, 235, 0.08);
+  --chip-bg-active: linear-gradient(135deg, #2563eb, #7c3aed);
+  --chip-fg-active: #ffffff;
+  --grid-line: rgba(37, 99, 235, 0.1);
+  --shadow: 0 24px 80px rgba(37, 99, 235, 0.1);
   --radius-card: 20px;
   --radius-chip: 999px;
   --font-display: "Space Grotesk", "Aptos", "Segoe UI", Arial, sans-serif;
@@ -33,7 +33,11 @@ html {
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 0%, rgba(255, 107, 53, 0.12), transparent 55%) var(--bg);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.18), transparent 34%),
+    radial-gradient(circle at 86% 6%, rgba(124, 58, 237, 0.16), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.12), transparent 40%),
+    linear-gradient(180deg, #eef7ff 0%, #f8fbff 48%, #eef6ff 100%);
   color: var(--ink);
   font-family: var(--font-display);
   font-size: 15px;
@@ -72,6 +76,7 @@ input:focus-visible {
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 251, 255, 0.76));
 }
 
 .lp-chip {
@@ -92,7 +97,10 @@ input:focus-visible {
 }
 
 .lp-eyebrow {
-  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.2em;
