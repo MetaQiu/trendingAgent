@@ -49,7 +49,7 @@ function buildCalendarDays(year: number, month: number) {
   });
 }
 
-export function DateSelector({ dates, currentDate, locale }: { dates: string[]; currentDate?: string; locale: Locale }) {
+export function DateSelector({ dates, currentDate, locale, observedDate }: { dates: string[]; currentDate?: string; locale: Locale; observedDate?: string }) {
   const t = messages[locale].dateSelector;
   const [open, setOpen] = useState(false);
   const selectorRef = useRef<HTMLDivElement>(null);
@@ -180,6 +180,12 @@ export function DateSelector({ dates, currentDate, locale }: { dates: string[]; 
       ) : (
         <Link className="lp-chip lp-chip-active px-5 py-2 font-semibold" href={getDateHref(latestDate)}>{t.latest}</Link>
       )}
+      {observedDate ? (
+        <span className="ml-auto inline-flex h-11 items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 font-mono text-sm shadow-sm backdrop-blur">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] lp-muted">{messages[locale].app.observed}</span>
+          <strong className="lp-ink">{observedDate}</strong>
+        </span>
+      ) : null}
     </div>
   );
 }

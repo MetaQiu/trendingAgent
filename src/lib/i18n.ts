@@ -1,13 +1,13 @@
 export type Locale = "zh" | "en";
 
 export function parseLocale(value: string | null | undefined): Locale {
-  return value === "en" ? "en" : "zh";
+  return value === "zh" ? "zh" : "en";
 }
 
 export function buildHomeHref({ date, locale }: { date?: string | null; locale?: Locale }) {
   const params = new URLSearchParams();
   if (date) params.set("date", date);
-  if (locale === "en") params.set("locale", "en");
+  if (locale === "zh") params.set("locale", "zh");
   const query = params.toString();
   return query ? `/?${query}` : "/";
 }
@@ -19,8 +19,8 @@ export function formatMessage(template: string, values: Record<string, string | 
 export const messages = {
   zh: {
     app: {
-      title: "GitHub Trending 智能总结",
-      description: "自动抓取、中文总结和趋势可视化。",
+      title: "GitHub Trending 技术雷达",
+      description: "用 AI 精读热门开源项目，追踪开发者生态脉搏，沉淀每日技术趋势洞察。",
       emptyDescription: "还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。",
       observed: "Observed",
       githubAria: "打开 GitHub 仓库",
@@ -122,8 +122,8 @@ export const messages = {
   },
   en: {
     app: {
-      title: "GitHub Trending Intelligence",
-      description: "Automated GitHub Trending collection, bilingual LLM summaries, and trend visualization.",
+      title: "GitHub Trending Signal Intelligence",
+      description: "AI-powered daily intelligence for discovering breakout open-source projects, decoding developer momentum, and mapping emerging technology trends.",
       emptyDescription: "No snapshot data yet. Configure DATABASE_URL, CRON_SECRET, and LLM environment variables, then enter the secret below to generate the first brief.",
       observed: "Observed",
       githubAria: "Open GitHub repository",

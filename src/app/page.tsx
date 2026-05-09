@@ -149,16 +149,12 @@ export default async function Home({
     <main className="lp-shell space-y-6">
       <SideNavigation locale={locale} />
       <header className="relative z-[70] flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="min-w-0 flex-1 overflow-x-auto pb-1">
+        <div className="min-w-0 flex-1 pb-1">
           <p className="lp-eyebrow">TrendingAgent</p>
-          <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">{t.app.title}</h1>
+          <h1 className="mt-2 text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">{t.app.title}</h1>
           <p className="mt-3 max-w-xl lp-muted">{t.app.description}</p>
         </div>
         <nav className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex h-11 items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 font-mono text-sm shadow-sm backdrop-blur">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] lp-muted">{t.app.observed}</span>
-            <strong className="lp-ink">{snapshotDate}</strong>
-          </span>
           <LanguageSwitch date={requestedDate} locale={locale} />
           <TopUtilityMenu runs={runs} locale={locale} />
           <a
@@ -174,7 +170,7 @@ export default async function Home({
         </nav>
       </header>
 
-      <DateSelector dates={dates} currentDate={snapshotDate} locale={locale} />
+      <DateSelector dates={dates} currentDate={snapshotDate} locale={locale} observedDate={snapshotDate} />
       <TopRepositoriesLeaderboard repos={displayRepos} locale={locale} />
       {metrics ? (
         <section id="charts" className="grid scroll-mt-8 gap-6 lg:grid-cols-2">
