@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
 import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
@@ -36,25 +39,56 @@ function LogsIcon() {
 }
 
 function UtilityDropdown({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!dropdownRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
   return (
-    <details className="group relative">
-      <summary
-        className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel)] text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)] group-open:border-[var(--accent)] group-open:text-[var(--accent)]"
+    <div ref={dropdownRef} className="relative">
+      <button
+        className={`flex h-11 w-11 items-center justify-center rounded-full border bg-[var(--panel)] text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)] ${open ? "border-[var(--accent)] text-[var(--accent)]" : "border-[var(--border)]"}`}
+        type="button"
         title={label}
         aria-label={label}
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
       >
         {icon}
-      </summary>
-      <div className="absolute right-0 top-[calc(100%+10px)] z-30 w-[min(92vw,520px)]">
-        {children}
-      </div>
-    </details>
+      </button>
+      {open ? (
+        <div className="absolute right-0 top-[calc(100%+10px)] z-[80] w-[min(92vw,520px)]">
+          {children}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
 export function TopUtilityMenu({ runs }: { runs: TrendingUpdateRunListItem[] }) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="relative z-[70] flex flex-wrap items-center gap-2">
       <UtilityDropdown label="手动更新" icon={<RefreshIcon />}>
         <UpdateTrendingButton />
       </UtilityDropdown>

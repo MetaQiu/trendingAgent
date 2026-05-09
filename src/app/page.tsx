@@ -82,7 +82,7 @@ export default async function Home({
     return (
       <main className="lp-shell">
         <div className="lp-card p-10 text-center">
-          <div className="flex flex-wrap justify-end gap-2">
+          <div className="relative z-[70] flex flex-wrap justify-end gap-2">
             <TopUtilityMenu runs={runs} />
             <a
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel)] text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
@@ -106,7 +106,7 @@ export default async function Home({
   return (
     <main className="lp-shell space-y-6">
       <SideNavigation />
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <header className="relative z-[70] flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0 flex-1 overflow-x-auto pb-1">
           <p className="lp-eyebrow">TrendingAgent</p>
           <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
