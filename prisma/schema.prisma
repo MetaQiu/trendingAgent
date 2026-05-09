@@ -13,6 +13,7 @@ model TrendingSnapshot {
   language     String         @default("all")
   since        String         @default("daily")
   summary      String
+  summaryEn    String?
   insightsJson Json
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -37,9 +38,13 @@ model TrendingRepo {
   forks                Int              @default(0)
   starsToday           Int              @default(0)
   summary              String?
+  summaryEn            String?
   readmeSummary        String?
+  readmeSummaryEn      String?
   recommendationReason String?
+  recommendationReasonEn String?
   tagsJson             Json
+  tagsJsonEn           Json?
   createdAt            DateTime         @default(now())
   snapshot             TrendingSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
 

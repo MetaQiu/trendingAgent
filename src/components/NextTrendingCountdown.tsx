@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { messages, type Locale } from "@/lib/i18n";
 
 const CRON_HOUR_UTC = 1;
 const CRON_MINUTE_UTC = 5;
@@ -21,7 +22,8 @@ function formatRemaining(ms: number) {
   return [hours, minutes, seconds].map((value) => value.toString().padStart(2, "0")).join(":");
 }
 
-export function NextTrendingCountdown() {
+export function NextTrendingCountdown({ locale }: { locale: Locale }) {
+  const t = messages[locale].nextRun;
   const [now, setNow] = useState(() => new Date());
   const nextRun = useMemo(() => getNextRun(now), [now]);
 
@@ -32,11 +34,11 @@ export function NextTrendingCountdown() {
 
   return (
     <div className="lp-card p-6 text-left">
-      <p className="lp-eyebrow">Next Run</p>
+      <p className="lp-eyebrow">{t.eyebrow}</p>
       <p className="mt-3 font-mono text-3xl font-semibold lp-ink">{formatRemaining(nextRun.getTime() - now.getTime())}</p>
       <div className="mt-4 space-y-1 text-sm lp-muted">
-        <p>UTC：{nextRun.toISOString().replace(".000Z", "Z")}</p>
-        <p>本地：{nextRun.toLocaleString()}</p>
+        <p>{t.utc}：{nextRun.toISOString().replace(".000Z", "Z")}</p>
+        <p>{t.local}：{nextRun.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}</p>
       </div>
     </div>
   );

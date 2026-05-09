@@ -22,7 +22,7 @@ async function createJsonCompletion(prompt: string, maxTokens: number) {
       max_tokens: maxTokens,
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: "你是严谨的中文技术趋势分析师。只输出 JSON。" },
+        { role: "system", content: "你是严谨的中英文双语技术趋势分析师。只输出 JSON。" },
         { role: "user", content: prompt },
       ],
     }),
@@ -54,7 +54,7 @@ export async function summarizeRepoReadmeWithOpenAICompatible({
   readmeText: string | null;
   dateKey: string;
 }): Promise<RepoReadmeSummary> {
-  return repoReadmeSummarySchema.parse(await createJsonCompletion(buildRepoReadmeSummaryPrompt({ repo, readmeText, dateKey }), 1200));
+  return repoReadmeSummarySchema.parse(await createJsonCompletion(buildRepoReadmeSummaryPrompt({ repo, readmeText, dateKey }), 1800));
 }
 
 export async function summarizeDailyTrendingWithOpenAICompatible({
@@ -66,5 +66,5 @@ export async function summarizeDailyTrendingWithOpenAICompatible({
   repoSummaries: RepoReadmeSummary[];
   dateKey: string;
 }): Promise<DailyTrendingSummary> {
-  return dailyTrendingSummarySchema.parse(await createJsonCompletion(buildDailyTrendingSummaryPrompt({ repos, repoSummaries, dateKey }), 2500));
+  return dailyTrendingSummarySchema.parse(await createJsonCompletion(buildDailyTrendingSummaryPrompt({ repos, repoSummaries, dateKey }), 4000));
 }

@@ -23,12 +23,12 @@ export type RepoReadmeLlmResult = {
   error?: string;
 };
 
-function normalizeTags(tags: string[], repo: TrendingRepoItem) {
+function normalizeTags(tags: string[], repo: TrendingRepoItem, locale: "zh" | "en") {
   const normalized = [...new Set(tags.map((tag) => tag.trim()).filter(Boolean))].slice(0, 6);
   if (normalized.length > 0) {
     return normalized;
   }
-  return [repo.language, repo.starsToday > 0 ? "今日热门" : null].filter(Boolean) as string[];
+  return [repo.language, repo.starsToday > 0 ? (locale === "en" ? "Trending today" : "今日热门") : null].filter(Boolean) as string[];
 }
 
 function normalizeRepoSummary(summary: RepoReadmeSummary, repo: TrendingRepoItem): RepoReadmeSummary {
@@ -39,9 +39,25 @@ function normalizeRepoSummary(summary: RepoReadmeSummary, repo: TrendingRepoItem
   return {
     repoFullName: summary.repoFullName,
     summary: summary.summary.trim() || repo.description || "该仓库描述信息有限，暂无法做进一步总结。",
+    summaryEn: summary.summaryEn.trim() || repo.description || "Limited repository metadata is available, so no deeper summary can be provided.",
     readmeSummary: summary.readmeSummary.trim() || "README 总结为空，建议打开仓库查看详细说明。",
+    readmeSummaryEn: summary.readmeSummaryEn.trim() || "The README summary is empty. Open the repository for details.",
     recommendationReason: summary.recommendationReason?.trim() || null,
-    tags: normalizeTags(summary.tags, repo),
+    recommendationReasonEn: summary.recommendationReasonEn?.trim() || null,
+    tags: normalizeTags(summary.tags, repo, "zh"),
+    tagsEn: normalizeTags(summary.tagsEn, repo, "en"),
+  };
+}
+
+function normalizeDailySummary(summary: DailyTrendingSummary, repos: TrendingRepoItem[]): DailyTrendingSummary {
+  const fallback = buildFallbackDailySummary(repos);
+  return {
+    dailySummary: summary.dailySummary.trim() || fallback.dailySummary,
+    dailySummaryEn: summary.dailySummaryEn.trim() || fallback.dailySummaryEn,
+    trendInsights: summary.trendInsights.map((item) => item.trim()).filter(Boolean).slice(0, 5),
+    trendInsightsEn: summary.trendInsightsEn.map((item) => item.trim()).filter(Boolean).slice(0, 5),
+    topRecommendations: summary.topRecommendations.filter((item) => item.repoFullName && item.reason).slice(0, 5),
+    topRecommendationsEn: summary.topRecommendationsEn.filter((item) => item.repoFullName && item.reason).slice(0, 5),
   };
 }
 
@@ -49,17 +65,22 @@ export async function summarizeWithConfiguredLLM(repos: TrendingRepoItem[], date
   const provider = process.env.LLM_PROVIDER || "anthropic";
 
   try {
-    if (provider === "openai-compatible") {
-      return {
-        summary: await summarizeWithOpenAICompatible(repos, dateKey),
-        provider,
-        fallback: false,
-      };
-    }
+    const summary = provider === "openai-compatible"
+      ? await summarizeWithOpenAICompatible(repos, dateKey)
+      : await summarizeWithAnthropic(repos, dateKey);
 
     return {
-      summary: await summarizeWithAnthropic(repos, dateKey),
-      provider: "anthropic",
+      summary: {
+        ...normalizeDailySummary(summary, repos),
+        repoSummaries: summary.repoSummaries.map((item) => ({
+          repoFullName: item.repoFullName,
+          summary: item.summary.trim(),
+          summaryEn: item.summaryEn.trim(),
+          tags: item.tags.map((tag) => tag.trim()).filter(Boolean),
+          tagsEn: item.tagsEn.map((tag) => tag.trim()).filter(Boolean),
+        })),
+      },
+      provider: provider === "openai-compatible" ? provider : "anthropic",
       fallback: false,
     };
   } catch (error) {
@@ -122,7 +143,7 @@ export async function summarizeDailyTrendingWithConfiguredLLM({
         : await summarizeDailyTrendingWithAnthropic({ repos, repoSummaries, dateKey });
 
     return {
-      summary,
+      summary: normalizeDailySummary(summary, repos),
       provider: provider === "openai-compatible" ? provider : "anthropic",
       fallback: false,
     };
@@ -140,28 +161,45 @@ export function buildFallbackRepoReadmeSummary(repo: TrendingRepoItem, readmeFet
   return {
     repoFullName: repo.repoFullName,
     summary: repo.description || "该仓库描述信息有限，暂无法做进一步总结。",
+    summaryEn: repo.description || "Limited repository metadata is available, so no deeper summary can be provided.",
     readmeSummary: readmeFetched
       ? "README 已抓取，但 LLM 总结暂不可用，建议打开仓库查看详细说明。"
       : "未能获取 README，以下仅基于 Trending 列表字段保守判断。",
+    readmeSummaryEn: readmeFetched
+      ? "The README was fetched, but the LLM summary is currently unavailable. Open the repository for details."
+      : "The README could not be fetched. This is a conservative assessment based only on GitHub Trending fields.",
     recommendationReason: `今日新增 ${repo.starsToday} stars，排名第 ${repo.rank}。${repo.description || "描述信息有限，建议结合 README 进一步判断。"}`,
-    tags: [repo.language, repo.starsToday > 0 ? "今日热门" : null].filter(Boolean) as string[],
+    recommendationReasonEn: `It gained ${repo.starsToday} stars today and ranks #${repo.rank}. ${repo.description || "The description is limited, so check the README before making a deeper assessment."}`,
+    tags: normalizeTags([], repo, "zh"),
+    tagsEn: normalizeTags([], repo, "en"),
   };
 }
 
 export function buildFallbackDailySummary(repos: TrendingRepoItem[]): DailyTrendingSummary {
   const topByStarsToday = [...repos].sort((a, b) => b.starsToday - a.starsToday).slice(0, 5);
   const languages = [...new Set(repos.map((repo) => repo.language).filter(Boolean))];
+  const totalStarsToday = repos.reduce((sum, repo) => sum + repo.starsToday, 0);
 
   return {
     dailySummary: `今日共抓取 ${repos.length} 个 GitHub Trending 项目。LLM 日报总结暂不可用，以下为基于仓库描述、语言和 star 数据生成的规则摘要。主要语言包括：${languages.slice(0, 5).join("、") || "暂无明确语言"}。`,
+    dailySummaryEn: `Fetched ${repos.length} GitHub Trending repositories today. The LLM daily brief is currently unavailable, so this is a rule-based summary from descriptions, languages, and star data. Main languages include: ${languages.slice(0, 5).join(", ") || "no clear language data"}.`,
     trendInsights: [
-      `今日新增 stars 总数为 ${repos.reduce((sum, repo) => sum + repo.starsToday, 0)}。`,
+      `今日新增 stars 总数为 ${totalStarsToday}。`,
       `新增 stars 最高项目是 ${topByStarsToday[0]?.repoFullName || "暂无"}。`,
       "该摘要未调用模型推断，仅展示抓取字段中的可见趋势。",
+    ],
+    trendInsightsEn: [
+      `Total new stars today: ${totalStarsToday}.`,
+      `The repository with the most new stars is ${topByStarsToday[0]?.repoFullName || "N/A"}.`,
+      "This summary does not infer with a model; it only shows visible trends from fetched fields.",
     ],
     topRecommendations: topByStarsToday.map((repo) => ({
       repoFullName: repo.repoFullName,
       reason: `今日新增 ${repo.starsToday} stars，排名第 ${repo.rank}。${repo.description || "描述信息有限，建议结合 README 进一步判断。"}`,
+    })),
+    topRecommendationsEn: topByStarsToday.map((repo) => ({
+      repoFullName: repo.repoFullName,
+      reason: `It gained ${repo.starsToday} stars today and ranks #${repo.rank}. ${repo.description || "The description is limited, so check the README before making a deeper assessment."}`,
     })),
   };
 }
@@ -174,7 +212,9 @@ export function buildFallbackSummary(repos: TrendingRepoItem[]): TrendingSummary
     repoSummaries: repos.map((repo) => ({
       repoFullName: repo.repoFullName,
       summary: repo.description || "该仓库描述信息有限，暂无法做进一步总结。",
-      tags: [repo.language, repo.starsToday > 0 ? "今日热门" : null].filter(Boolean) as string[],
+      summaryEn: repo.description || "Limited repository metadata is available, so no deeper summary can be provided.",
+      tags: normalizeTags([], repo, "zh"),
+      tagsEn: normalizeTags([], repo, "en"),
     })),
   };
 }

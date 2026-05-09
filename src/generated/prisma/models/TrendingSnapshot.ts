@@ -30,6 +30,7 @@ export type TrendingSnapshotMinAggregateOutputType = {
   language: string | null
   since: string | null
   summary: string | null
+  summaryEn: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +41,7 @@ export type TrendingSnapshotMaxAggregateOutputType = {
   language: string | null
   since: string | null
   summary: string | null
+  summaryEn: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +52,7 @@ export type TrendingSnapshotCountAggregateOutputType = {
   language: number
   since: number
   summary: number
+  summaryEn: number
   insightsJson: number
   createdAt: number
   updatedAt: number
@@ -63,6 +66,7 @@ export type TrendingSnapshotMinAggregateInputType = {
   language?: true
   since?: true
   summary?: true
+  summaryEn?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -73,6 +77,7 @@ export type TrendingSnapshotMaxAggregateInputType = {
   language?: true
   since?: true
   summary?: true
+  summaryEn?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -83,6 +88,7 @@ export type TrendingSnapshotCountAggregateInputType = {
   language?: true
   since?: true
   summary?: true
+  summaryEn?: true
   insightsJson?: true
   createdAt?: true
   updatedAt?: true
@@ -167,6 +173,7 @@ export type TrendingSnapshotGroupByOutputType = {
   language: string
   since: string
   summary: string
+  summaryEn: string | null
   insightsJson: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
@@ -199,6 +206,7 @@ export type TrendingSnapshotWhereInput = {
   language?: Prisma.StringFilter<"TrendingSnapshot"> | string
   since?: Prisma.StringFilter<"TrendingSnapshot"> | string
   summary?: Prisma.StringFilter<"TrendingSnapshot"> | string
+  summaryEn?: Prisma.StringNullableFilter<"TrendingSnapshot"> | string | null
   insightsJson?: Prisma.JsonFilter<"TrendingSnapshot">
   createdAt?: Prisma.DateTimeFilter<"TrendingSnapshot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TrendingSnapshot"> | Date | string
@@ -211,6 +219,7 @@ export type TrendingSnapshotOrderByWithRelationInput = {
   language?: Prisma.SortOrder
   since?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  summaryEn?: Prisma.SortOrderInput | Prisma.SortOrder
   insightsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -227,6 +236,7 @@ export type TrendingSnapshotWhereUniqueInput = Prisma.AtLeast<{
   language?: Prisma.StringFilter<"TrendingSnapshot"> | string
   since?: Prisma.StringFilter<"TrendingSnapshot"> | string
   summary?: Prisma.StringFilter<"TrendingSnapshot"> | string
+  summaryEn?: Prisma.StringNullableFilter<"TrendingSnapshot"> | string | null
   insightsJson?: Prisma.JsonFilter<"TrendingSnapshot">
   createdAt?: Prisma.DateTimeFilter<"TrendingSnapshot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TrendingSnapshot"> | Date | string
@@ -239,6 +249,7 @@ export type TrendingSnapshotOrderByWithAggregationInput = {
   language?: Prisma.SortOrder
   since?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  summaryEn?: Prisma.SortOrderInput | Prisma.SortOrder
   insightsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -256,6 +267,7 @@ export type TrendingSnapshotScalarWhereWithAggregatesInput = {
   language?: Prisma.StringWithAggregatesFilter<"TrendingSnapshot"> | string
   since?: Prisma.StringWithAggregatesFilter<"TrendingSnapshot"> | string
   summary?: Prisma.StringWithAggregatesFilter<"TrendingSnapshot"> | string
+  summaryEn?: Prisma.StringNullableWithAggregatesFilter<"TrendingSnapshot"> | string | null
   insightsJson?: Prisma.JsonWithAggregatesFilter<"TrendingSnapshot">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TrendingSnapshot"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TrendingSnapshot"> | Date | string
@@ -267,6 +279,7 @@ export type TrendingSnapshotCreateInput = {
   language?: string
   since?: string
   summary: string
+  summaryEn?: string | null
   insightsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -279,6 +292,7 @@ export type TrendingSnapshotUncheckedCreateInput = {
   language?: string
   since?: string
   summary: string
+  summaryEn?: string | null
   insightsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -291,6 +305,7 @@ export type TrendingSnapshotUpdateInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -303,6 +318,7 @@ export type TrendingSnapshotUncheckedUpdateInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,6 +331,7 @@ export type TrendingSnapshotCreateManyInput = {
   language?: string
   since?: string
   summary: string
+  summaryEn?: string | null
   insightsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -326,6 +343,7 @@ export type TrendingSnapshotUpdateManyMutationInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -337,6 +355,7 @@ export type TrendingSnapshotUncheckedUpdateManyInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -354,6 +373,7 @@ export type TrendingSnapshotCountOrderByAggregateInput = {
   language?: Prisma.SortOrder
   since?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  summaryEn?: Prisma.SortOrder
   insightsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -365,6 +385,7 @@ export type TrendingSnapshotMaxOrderByAggregateInput = {
   language?: Prisma.SortOrder
   since?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  summaryEn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -375,6 +396,7 @@ export type TrendingSnapshotMinOrderByAggregateInput = {
   language?: Prisma.SortOrder
   since?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  summaryEn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +412,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type TrendingSnapshotCreateNestedOneWithoutReposInput = {
@@ -412,6 +438,7 @@ export type TrendingSnapshotCreateWithoutReposInput = {
   language?: string
   since?: string
   summary: string
+  summaryEn?: string | null
   insightsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -423,6 +450,7 @@ export type TrendingSnapshotUncheckedCreateWithoutReposInput = {
   language?: string
   since?: string
   summary: string
+  summaryEn?: string | null
   insightsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -450,6 +478,7 @@ export type TrendingSnapshotUpdateWithoutReposInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -461,6 +490,7 @@ export type TrendingSnapshotUncheckedUpdateWithoutReposInput = {
   language?: Prisma.StringFieldUpdateOperationsInput | string
   since?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insightsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,6 +533,7 @@ export type TrendingSnapshotSelect<ExtArgs extends runtime.Types.Extensions.Inte
   language?: boolean
   since?: boolean
   summary?: boolean
+  summaryEn?: boolean
   insightsJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -516,6 +547,7 @@ export type TrendingSnapshotSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   language?: boolean
   since?: boolean
   summary?: boolean
+  summaryEn?: boolean
   insightsJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -527,6 +559,7 @@ export type TrendingSnapshotSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   language?: boolean
   since?: boolean
   summary?: boolean
+  summaryEn?: boolean
   insightsJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -538,12 +571,13 @@ export type TrendingSnapshotSelectScalar = {
   language?: boolean
   since?: boolean
   summary?: boolean
+  summaryEn?: boolean
   insightsJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TrendingSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "language" | "since" | "summary" | "insightsJson" | "createdAt" | "updatedAt", ExtArgs["result"]["trendingSnapshot"]>
+export type TrendingSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "language" | "since" | "summary" | "summaryEn" | "insightsJson" | "createdAt" | "updatedAt", ExtArgs["result"]["trendingSnapshot"]>
 export type TrendingSnapshotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   repos?: boolean | Prisma.TrendingSnapshot$reposArgs<ExtArgs>
   _count?: boolean | Prisma.TrendingSnapshotCountOutputTypeDefaultArgs<ExtArgs>
@@ -562,6 +596,7 @@ export type $TrendingSnapshotPayload<ExtArgs extends runtime.Types.Extensions.In
     language: string
     since: string
     summary: string
+    summaryEn: string | null
     insightsJson: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
@@ -994,6 +1029,7 @@ export interface TrendingSnapshotFieldRefs {
   readonly language: Prisma.FieldRef<"TrendingSnapshot", 'String'>
   readonly since: Prisma.FieldRef<"TrendingSnapshot", 'String'>
   readonly summary: Prisma.FieldRef<"TrendingSnapshot", 'String'>
+  readonly summaryEn: Prisma.FieldRef<"TrendingSnapshot", 'String'>
   readonly insightsJson: Prisma.FieldRef<"TrendingSnapshot", 'Json'>
   readonly createdAt: Prisma.FieldRef<"TrendingSnapshot", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TrendingSnapshot", 'DateTime'>

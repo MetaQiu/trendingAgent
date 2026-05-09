@@ -9,12 +9,27 @@ import { TopRepositoriesLeaderboard } from "@/components/TopRepositoriesLeaderbo
 import { TopUtilityMenu } from "@/components/TopUtilityMenu";
 import type { TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { prisma } from "@/lib/db";
+import { buildHomeHref, messages, parseLocale } from "@/lib/i18n";
 import { computeMetrics } from "@/lib/metrics";
 import type { TrendingRepoItem } from "@/types/trending";
 
 export const dynamic = "force-dynamic";
 
-function toMetricRepos(repos: Array<{ rank: number; owner: string; name: string; repoFullName: string; url: string; description: string | null; language: string | null; languageColor: string | null; stars: number; forks: number; starsToday: number }>): TrendingRepoItem[] {
+type MetricRepo = {
+  rank: number;
+  owner: string;
+  name: string;
+  repoFullName: string;
+  url: string;
+  description: string | null;
+  language: string | null;
+  languageColor: string | null;
+  stars: number;
+  forks: number;
+  starsToday: number;
+};
+
+function toMetricRepos(repos: MetricRepo[]): TrendingRepoItem[] {
   return repos.map((repo) => ({ ...repo }));
 }
 
@@ -56,12 +71,29 @@ function toRunListItem(run: {
   };
 }
 
+function LanguageSwitch({ date, locale }: { date: string | null; locale: "zh" | "en" }) {
+  const t = messages[locale].app;
+  const targetLocale = locale === "en" ? "zh" : "en";
+  return (
+    <a
+      className="inline-flex h-11 min-w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 text-sm font-bold text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+      href={buildHomeHref({ date, locale: targetLocale })}
+      aria-label={t.languageSwitchAria}
+      title={t.languageSwitchAria}
+    >
+      {t.languageSwitch}
+    </a>
+  );
+}
+
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ date?: string }>;
+  searchParams: Promise<{ date?: string; locale?: string }>;
 }) {
-  const { date } = await searchParams;
+  const { date, locale: localeParam } = await searchParams;
+  const locale = parseLocale(localeParam);
+  const t = messages[locale];
   const requestedDate = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
   const snapshotQuery = requestedDate
     ? prisma.trendingSnapshot.findUnique({
@@ -83,76 +115,87 @@ export default async function Home({
       <main className="lp-shell">
         <div className="lp-card p-10 text-center">
           <div className="relative z-[70] flex flex-wrap justify-end gap-2">
-            <TopUtilityMenu runs={runs} />
+            <LanguageSwitch date={requestedDate} locale={locale} />
+            <TopUtilityMenu runs={runs} locale={locale} />
             <a
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel)] text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
               href="https://github.com/MetaQiu/trendingAgent"
               target="_blank"
               rel="noreferrer"
               title="GitHub"
-              aria-label="打开 GitHub 仓库"
+              aria-label={t.app.githubAria}
             >
               <GitHubIcon />
             </a>
           </div>
           <p className="lp-eyebrow mt-6">TrendingAgent</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight lp-ink">GitHub Trending 智能总结</h1>
-          <p className="mx-auto mt-4 max-w-2xl lp-muted">还没有快照数据。配置 DATABASE_URL、CRON_SECRET 和 LLM 环境变量后，可以在下方输入密钥生成第一份总结。</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight lp-ink">{t.app.title}</h1>
+          <p className="mx-auto mt-4 max-w-2xl lp-muted">{t.app.emptyDescription}</p>
         </div>
       </main>
     );
   }
 
+  const snapshotDate = snapshot.date.toISOString().slice(0, 10);
+  const displaySummary = locale === "en" ? snapshot.summaryEn || snapshot.summary : snapshot.summary;
+  const displayRepos = snapshot.repos.map((repo) => ({
+    ...repo,
+    summary: locale === "en" ? repo.summaryEn || repo.summary : repo.summary,
+    readmeSummary: locale === "en" ? repo.readmeSummaryEn || repo.readmeSummary : repo.readmeSummary,
+    recommendationReason: locale === "en" ? repo.recommendationReasonEn || repo.recommendationReason : repo.recommendationReason,
+  }));
+
   return (
     <main className="lp-shell space-y-6">
-      <SideNavigation />
+      <SideNavigation locale={locale} />
       <header className="relative z-[70] flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0 flex-1 overflow-x-auto pb-1">
           <p className="lp-eyebrow">TrendingAgent</p>
-          <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">GitHub Trending 智能总结</h1>
-          <p className="mt-3 max-w-xl lp-muted">自动抓取、中文总结和趋势可视化。</p>
+          <h1 className="mt-2 whitespace-nowrap text-[clamp(28px,4vw,52px)] font-bold leading-tight tracking-tight lp-ink">{t.app.title}</h1>
+          <p className="mt-3 max-w-xl lp-muted">{t.app.description}</p>
         </div>
         <nav className="flex flex-wrap items-center gap-2">
           <span className="inline-flex h-11 items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 font-mono text-sm shadow-sm backdrop-blur">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] lp-muted">Observed</span>
-            <strong className="lp-ink">{snapshot.date.toISOString().slice(0, 10)}</strong>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] lp-muted">{t.app.observed}</span>
+            <strong className="lp-ink">{snapshotDate}</strong>
           </span>
-          <TopUtilityMenu runs={runs} />
+          <LanguageSwitch date={requestedDate} locale={locale} />
+          <TopUtilityMenu runs={runs} locale={locale} />
           <a
             className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel)] text-[var(--ink)] shadow-sm backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
             href="https://github.com/MetaQiu/trendingAgent"
             target="_blank"
             rel="noreferrer"
             title="GitHub"
-            aria-label="打开 GitHub 仓库"
+            aria-label={t.app.githubAria}
           >
             <GitHubIcon />
           </a>
         </nav>
       </header>
 
-      <DateSelector dates={dates} currentDate={snapshot.date.toISOString().slice(0, 10)} />
-      <TopRepositoriesLeaderboard repos={snapshot.repos} />
+      <DateSelector dates={dates} currentDate={snapshotDate} locale={locale} />
+      <TopRepositoriesLeaderboard repos={displayRepos} locale={locale} />
       {metrics ? (
         <section id="charts" className="grid scroll-mt-8 gap-6 lg:grid-cols-2">
-          <LanguageChart data={metrics.languageDistribution} />
-          <StarsChart title="今日新增 Stars Top 10" data={metrics.starsTodayTop} dataKey="starsToday" />
+          <LanguageChart data={metrics.languageDistribution} locale={locale} />
+          <StarsChart title={t.app.starsTodayTitle} data={metrics.starsTodayTop} dataKey="starsToday" locale={locale} />
           <div className="lg:col-span-2">
-            <StarsChart title="总 Stars Top 10" data={metrics.totalStarsTop} dataKey="stars" />
+            <StarsChart title={t.app.totalStarsTitle} data={metrics.totalStarsTop} dataKey="stars" locale={locale} />
           </div>
         </section>
       ) : null}
       <div id="summary" className="scroll-mt-8">
-        <SummaryPanel summary={snapshot.summary} />
+        <SummaryPanel summary={displaySummary} locale={locale} />
       </div>
 
       <section id="repo-details" className="scroll-mt-8 space-y-4">
         <div>
-          <p className="lp-eyebrow">Repositories</p>
-          <h2 className="mt-1 text-xl font-semibold lp-ink">Trending 仓库</h2>
+          <p className="lp-eyebrow">{t.app.repositoriesEyebrow}</p>
+          <h2 className="mt-1 text-xl font-semibold lp-ink">{t.app.repositoriesTitle}</h2>
         </div>
         <div className="space-y-4">
-          {snapshot.repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
+          {displayRepos.map((repo) => <RepoCard key={repo.id} repo={repo} locale={locale} />)}
         </div>
       </section>
     </main>

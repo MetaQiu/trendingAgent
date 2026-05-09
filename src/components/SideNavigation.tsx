@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { messages, type Locale } from "@/lib/i18n";
 
-const sections = [
-  { id: "top-repositories", label: "排行" },
-  { id: "charts", label: "图表" },
-  { id: "summary", label: "总结" },
-];
+const sectionIds = ["top-repositories", "charts", "summary"] as const;
 
-export function SideNavigation() {
-  const [activeId, setActiveId] = useState(sections[0].id);
+export function SideNavigation({ locale }: { locale: Locale }) {
+  const labels = messages[locale].sideNavigation;
+  const sections = useMemo(() => [
+    { id: sectionIds[0], label: labels.sections.leaderboard },
+    { id: sectionIds[1], label: labels.sections.charts },
+    { id: sectionIds[2], label: labels.sections.summary },
+  ], [labels]);
+  const [activeId, setActiveId] = useState<typeof sectionIds[number]>(sectionIds[0]);
 
   useEffect(() => {
     const observers = sections
@@ -27,7 +30,7 @@ export function SideNavigation() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
         if (visibleEntry?.target.id) {
-          setActiveId(visibleEntry.target.id);
+          setActiveId(visibleEntry.target.id as typeof sectionIds[number]);
         }
       },
       { rootMargin: "-35% 0px -50% 0px", threshold: [0.1, 0.4, 0.7] },
@@ -36,10 +39,10 @@ export function SideNavigation() {
     observers.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, []);
+  }, [sections]);
 
   return (
-    <aside className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block" aria-label="页面位置导航">
+    <aside className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block" aria-label={labels.ariaLabel}>
       <nav className="relative flex flex-col gap-6 py-3 pl-5 pr-2">
         <span className="absolute left-[27px] top-4 h-[calc(100%-32px)] w-px bg-[var(--border)]" aria-hidden="true" />
         {sections.map((section) => {

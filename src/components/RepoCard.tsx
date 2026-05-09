@@ -1,3 +1,4 @@
+import { messages, type Locale } from "@/lib/i18n";
 import { getRepoAnchorId } from "@/lib/repoAnchor";
 
 type RepoCardProps = {
@@ -15,6 +16,7 @@ type RepoCardProps = {
     readmeSummary?: string | null;
     recommendationReason?: string | null;
   };
+  locale: Locale;
 };
 
 function StatPill({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "neutral" | "accent" | "positive" }) {
@@ -32,7 +34,8 @@ function StatPill({ label, value, tone = "neutral" }: { label: string; value: st
   );
 }
 
-export function RepoCard({ repo }: RepoCardProps) {
+export function RepoCard({ repo, locale }: RepoCardProps) {
+  const t = messages[locale].repoCard;
   return (
     <article id={getRepoAnchorId(repo.repoFullName)} className="lp-card scroll-mt-8 overflow-hidden p-5 transition hover:-translate-y-0.5 hover:border-[var(--accent)]">
       <div className="grid gap-5 lg:grid-cols-[44px_1fr_auto] lg:items-start">
@@ -45,13 +48,13 @@ export function RepoCard({ repo }: RepoCardProps) {
               {repo.repoFullName}
             </a>
           </div>
-          <p className="mt-3 max-w-4xl text-base leading-7 lp-muted">{repo.summary || repo.description || "暂无描述"}</p>
+          <p className="mt-3 max-w-4xl text-base leading-7 lp-muted">{repo.summary || repo.description || t.noDescription}</p>
         </div>
 
         <div className="grid min-w-0 grid-cols-3 gap-2 sm:min-w-[310px]">
-          <StatPill label="Stars" value={repo.stars.toLocaleString()} />
-          <StatPill label="Forks" value={repo.forks.toLocaleString()} tone="accent" />
-          <StatPill label="Today" value={`+${repo.starsToday.toLocaleString()}`} tone="positive" />
+          <StatPill label={t.stars} value={repo.stars.toLocaleString()} />
+          <StatPill label={t.forks} value={repo.forks.toLocaleString()} tone="accent" />
+          <StatPill label={t.today} value={`+${repo.starsToday.toLocaleString()}`} tone="positive" />
         </div>
       </div>
 
@@ -59,13 +62,13 @@ export function RepoCard({ repo }: RepoCardProps) {
         <div className="mt-5 grid gap-3 lg:grid-cols-[1.2fr_0.8fr]">
           {repo.readmeSummary ? (
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--chip-bg)] p-4 text-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">README 精读</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">{t.readmeSummary}</p>
               <p className="mt-2 leading-7 lp-ink">{repo.readmeSummary}</p>
             </div>
           ) : null}
           {repo.recommendationReason ? (
             <div className="rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--accent)_8%,transparent)] p-4 text-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">推荐理由</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">{t.recommendationReason}</p>
               <p className="mt-2 leading-7 lp-ink">{repo.recommendationReason}</p>
             </div>
           ) : null}
@@ -74,7 +77,7 @@ export function RepoCard({ repo }: RepoCardProps) {
 
       <div className="mt-5 flex items-center gap-2 border-t border-[var(--border)] pt-4 text-sm lp-muted">
         {repo.languageColor ? <span className="h-3 w-3 rounded-full" style={{ backgroundColor: repo.languageColor }} /> : null}
-        <span>{repo.language || "Unknown"}</span>
+        <span>{repo.language || t.unknown}</span>
       </div>
     </article>
   );

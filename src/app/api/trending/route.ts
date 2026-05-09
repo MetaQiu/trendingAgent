@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { parseDateKey } from "@/lib/date";
+import { parseLocale } from "@/lib/i18n";
 import { computeMetrics } from "@/lib/metrics";
 import type { TrendingRepoItem } from "@/types/trending";
 
@@ -10,6 +11,7 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const language = params.get("language") || "all";
   const since = params.get("since") || "daily";
+  parseLocale(params.get("locale"));
 
   try {
     const date = parseDateKey(params.get("date"));
@@ -38,9 +40,13 @@ export async function GET(request: NextRequest) {
     const responseRepos = snapshot.repos.map((repo) => ({
       ...repo,
       summary: repo.summary,
+      summaryEn: repo.summaryEn,
       readmeSummary: repo.readmeSummary,
+      readmeSummaryEn: repo.readmeSummaryEn,
       recommendationReason: repo.recommendationReason,
+      recommendationReasonEn: repo.recommendationReasonEn,
       tagsJson: repo.tagsJson,
+      tagsJsonEn: repo.tagsJsonEn,
     }));
 
     return NextResponse.json({
@@ -50,6 +56,7 @@ export async function GET(request: NextRequest) {
         language: snapshot.language,
         since: snapshot.since,
         summary: snapshot.summary,
+        summaryEn: snapshot.summaryEn,
         insights: snapshot.insightsJson,
         createdAt: snapshot.createdAt,
         updatedAt: snapshot.updatedAt,

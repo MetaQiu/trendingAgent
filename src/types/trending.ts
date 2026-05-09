@@ -17,15 +17,21 @@ export type TrendingRepoItem = {
 export type RepoSummary = {
   repoFullName: string;
   summary: string;
+  summaryEn: string;
   tags: string[];
+  tagsEn: string[];
 };
 
 export type RepoReadmeSummary = {
   repoFullName: string;
   summary: string;
+  summaryEn: string;
   readmeSummary: string;
+  readmeSummaryEn: string;
   recommendationReason: string | null;
+  recommendationReasonEn: string | null;
   tags: string[];
+  tagsEn: string[];
 };
 
 export type RepoReadmeSummaryResult = {
@@ -45,8 +51,11 @@ export type TopRecommendation = {
 
 export type DailyTrendingSummary = {
   dailySummary: string;
+  dailySummaryEn: string;
   trendInsights: string[];
+  trendInsightsEn: string[];
   topRecommendations: TopRecommendation[];
+  topRecommendationsEn: TopRecommendation[];
 };
 
 export type TrendingSummary = DailyTrendingSummary & {

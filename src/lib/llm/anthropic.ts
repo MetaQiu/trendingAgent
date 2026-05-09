@@ -60,7 +60,7 @@ async function createStructuredJson<T>({
           schema,
         },
       },
-      system: "你是严谨的中文技术趋势分析师。只输出符合 schema 的 JSON。",
+      system: "你是严谨的中英文双语技术趋势分析师。只输出符合 schema 的 JSON。",
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -97,7 +97,7 @@ export async function summarizeRepoReadmeWithAnthropic({
   const data = await createStructuredJson<unknown>({
     prompt: buildRepoReadmeSummaryPrompt({ repo, readmeText, dateKey }),
     schema: repoReadmeSummaryJsonSchema,
-    maxTokens: 1200,
+    maxTokens: 1800,
   });
 
   return repoReadmeSummarySchema.parse(data);
@@ -115,7 +115,7 @@ export async function summarizeDailyTrendingWithAnthropic({
   const data = await createStructuredJson<unknown>({
     prompt: buildDailyTrendingSummaryPrompt({ repos, repoSummaries, dateKey }),
     schema: dailyTrendingSummaryJsonSchema,
-    maxTokens: 2500,
+    maxTokens: 4000,
   });
 
   return dailyTrendingSummarySchema.parse(data);

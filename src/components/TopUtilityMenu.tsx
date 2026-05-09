@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { NextTrendingCountdown } from "@/components/NextTrendingCountdown";
 import { TrendingUpdateRunsPanel, type TrendingUpdateRunListItem } from "@/components/TrendingUpdateRunsPanel";
 import { UpdateTrendingButton } from "@/components/UpdateTrendingButton";
+import { messages, type Locale } from "@/lib/i18n";
 
 function RefreshIcon() {
   return (
@@ -86,17 +87,18 @@ function UtilityDropdown({ label, icon, children }: { label: string; icon: React
   );
 }
 
-export function TopUtilityMenu({ runs }: { runs: TrendingUpdateRunListItem[] }) {
+export function TopUtilityMenu({ runs, locale }: { runs: TrendingUpdateRunListItem[]; locale: Locale }) {
+  const t = messages[locale].topUtilityMenu;
   return (
     <div className="relative z-[70] flex flex-wrap items-center gap-2">
-      <UtilityDropdown label="手动更新" icon={<RefreshIcon />}>
-        <UpdateTrendingButton />
+      <UtilityDropdown label={t.manualUpdate} icon={<RefreshIcon />}>
+        <UpdateTrendingButton locale={locale} />
       </UtilityDropdown>
-      <UtilityDropdown label="下次运行" icon={<ClockIcon />}>
-        <NextTrendingCountdown />
+      <UtilityDropdown label={t.nextRun} icon={<ClockIcon />}>
+        <NextTrendingCountdown locale={locale} />
       </UtilityDropdown>
-      <UtilityDropdown label="运行日志" icon={<LogsIcon />}>
-        <TrendingUpdateRunsPanel runs={runs} />
+      <UtilityDropdown label={t.runs} icon={<LogsIcon />}>
+        <TrendingUpdateRunsPanel runs={runs} locale={locale} />
       </UtilityDropdown>
     </div>
   );

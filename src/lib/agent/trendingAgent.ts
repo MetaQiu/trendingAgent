@@ -188,6 +188,7 @@ export async function runTrendingAgent(options?: {
         },
         update: {
           summary: dailySummary.dailySummary,
+          summaryEn: dailySummary.dailySummaryEn,
           insightsJson,
         },
         create: {
@@ -195,6 +196,7 @@ export async function runTrendingAgent(options?: {
           language,
           since,
           summary: dailySummary.dailySummary,
+          summaryEn: dailySummary.dailySummaryEn,
           insightsJson,
         },
       });
@@ -217,9 +219,13 @@ export async function runTrendingAgent(options?: {
             forks: repo.forks,
             starsToday: repo.starsToday,
             summary: repoSummary?.summary,
+            summaryEn: repoSummary?.summaryEn,
             readmeSummary: repoSummary?.readmeSummary,
+            readmeSummaryEn: repoSummary?.readmeSummaryEn,
             recommendationReason: repoSummary?.recommendationReason,
+            recommendationReasonEn: repoSummary?.recommendationReasonEn,
             tagsJson: repoSummary?.tags ?? [],
+            tagsJsonEn: repoSummary?.tagsEn ?? [],
           };
         }),
       });

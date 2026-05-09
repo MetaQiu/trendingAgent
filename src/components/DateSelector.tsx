@@ -2,15 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-
-const weekDays = ["一", "二", "三", "四", "五", "六", "日"];
+import { buildHomeHref, formatMessage, messages, type Locale } from "@/lib/i18n";
 
 function formatDisplayDate(date: string) {
   return date.replaceAll("-", "/");
-}
-
-function getDateHref(date: string) {
-  return `/?date=${date}`;
 }
 
 function parseDateParts(date: string) {
@@ -54,7 +49,8 @@ function buildCalendarDays(year: number, month: number) {
   });
 }
 
-export function DateSelector({ dates, currentDate }: { dates: string[]; currentDate?: string }) {
+export function DateSelector({ dates, currentDate, locale }: { dates: string[]; currentDate?: string; locale: Locale }) {
+  const t = messages[locale].dateSelector;
   const [open, setOpen] = useState(false);
   const selectorRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +91,12 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
   const latestDate = dates[0];
   const isLatest = selectedDate === latestDate;
   const todayKey = getTodayKey();
-  const todayHref = dateSet.has(todayKey) ? getDateHref(todayKey) : getDateHref(latestDate);
+  const todayHref = dateSet.has(todayKey) ? buildHomeHref({ date: todayKey, locale }) : buildHomeHref({ date: latestDate, locale });
+  const monthLabel = formatMessage(t.monthYear, { year: visibleMonth.year, month: visibleMonth.month + 1 });
+
+  function getDateHref(date: string) {
+    return buildHomeHref({ date, locale });
+  }
 
   function shiftMonth(offset: number) {
     setVisibleMonth((current) => {
@@ -112,6 +113,7 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
         <button
           className={`inline-flex h-11 items-center gap-2 rounded-xl border bg-[var(--bg-elev)] px-4 font-mono text-sm font-semibold lp-ink shadow-sm transition hover:border-[var(--accent)] ${open ? "border-[var(--accent)]" : "border-[var(--border)]"}`}
           type="button"
+          aria-label={t.selectDate}
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
         >
@@ -125,17 +127,17 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
         {open ? (
           <div className="absolute left-0 top-[calc(100%+8px)] z-[60] w-[280px] rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-4 shadow-[var(--shadow)]">
             <div className="mb-4 flex items-center justify-between">
-              <button className="rounded-full px-2 py-1 text-sm font-semibold lp-ink hover:bg-[var(--chip-bg)]" type="button" onClick={() => shiftMonth(-1)} aria-label="上个月">
+              <button className="rounded-full px-2 py-1 text-sm font-semibold lp-ink hover:bg-[var(--chip-bg)]" type="button" onClick={() => shiftMonth(-1)} aria-label={t.previousMonth}>
                 ↑
               </button>
-              <span className="text-sm font-bold lp-ink">{visibleMonth.year}年{visibleMonth.month + 1}月</span>
-              <button className="rounded-full px-2 py-1 text-sm font-semibold lp-muted hover:bg-[var(--chip-bg)]" type="button" onClick={() => shiftMonth(1)} aria-label="下个月">
+              <span className="text-sm font-bold lp-ink">{monthLabel}</span>
+              <button className="rounded-full px-2 py-1 text-sm font-semibold lp-muted hover:bg-[var(--chip-bg)]" type="button" onClick={() => shiftMonth(1)} aria-label={t.nextMonth}>
                 ↓
               </button>
             </div>
 
             <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold lp-ink">
-              {weekDays.map((day) => <span key={day} className="py-1">{day}</span>)}
+              {t.weekDays.map((day) => <span key={day} className="py-1">{day}</span>)}
             </div>
 
             <div className="mt-2 grid grid-cols-7 gap-1 text-center text-sm">
@@ -165,8 +167,8 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
             </div>
 
             <div className="mt-4 flex items-center justify-between text-sm font-medium text-[var(--accent)]">
-              <Link href="/">清除</Link>
-              <Link href={todayHref}>今天</Link>
+              <Link href={buildHomeHref({ locale })}>{t.clear}</Link>
+              <Link href={todayHref}>{t.today}</Link>
             </div>
           </div>
         ) : null}
@@ -174,9 +176,9 @@ export function DateSelector({ dates, currentDate }: { dates: string[]; currentD
 
       <ArrowButton direction="next" href={newerDate ? getDateHref(newerDate) : undefined} disabled={!newerDate} />
       {isLatest ? (
-        <span className="lp-chip lp-chip-active px-5 py-2 font-semibold">Latest</span>
+        <span className="lp-chip lp-chip-active px-5 py-2 font-semibold">{t.latest}</span>
       ) : (
-        <Link className="lp-chip lp-chip-active px-5 py-2 font-semibold" href={getDateHref(latestDate)}>Latest</Link>
+        <Link className="lp-chip lp-chip-active px-5 py-2 font-semibold" href={getDateHref(latestDate)}>{t.latest}</Link>
       )}
     </div>
   );

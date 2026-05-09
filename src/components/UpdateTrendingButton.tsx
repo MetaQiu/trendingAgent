@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { formatMessage, messages, type Locale } from "@/lib/i18n";
 
 type UpdateResult = {
   ok?: boolean;
@@ -24,7 +25,8 @@ type UpdateResult = {
   }>;
 };
 
-export function UpdateTrendingButton() {
+export function UpdateTrendingButton({ locale }: { locale: Locale }) {
+  const t = messages[locale].updatePanel;
   const router = useRouter();
   const [secret, setSecret] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -34,12 +36,12 @@ export function UpdateTrendingButton() {
     const token = secret.trim();
     if (!token) {
       setStatus("error");
-      setMessage("请输入 CRON_SECRET");
+      setMessage(t.missingSecret);
       return;
     }
 
     setStatus("loading");
-    setMessage("正在抓取 GitHub Trending 并生成总结，请稍候...");
+    setMessage(t.loading);
 
     try {
       const response = await fetch("/api/cron/update-trending?trigger=manual", {
@@ -52,29 +54,29 @@ export function UpdateTrendingButton() {
 
       if (!response.ok || !data.ok) {
         const message = response.status === 409
-          ? "已有更新任务正在运行，请稍后再试"
-          : data.run?.message || data.run?.errorMessage || data.error || "更新失败";
+          ? t.conflict
+          : data.run?.message || data.run?.errorMessage || data.error || t.failed;
         throw new Error(message);
       }
 
       const repoCount = data.run?.repoCount ?? data.results?.reduce((sum, item) => sum + item.repoCount, 0) ?? 0;
       setStatus("success");
-      setMessage(data.run?.message || `更新成功，共写入 ${repoCount} 个仓库。页面即将刷新。`);
+      setMessage(data.run?.message || formatMessage(t.success, { count: repoCount }));
       setSecret("");
       router.refresh();
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof Error ? error.message : "更新失败");
+      setMessage(error instanceof Error ? error.message : t.failed);
       router.refresh();
     }
   }
 
   return (
     <div className="lp-card p-6 text-left">
-      <p className="lp-eyebrow">Manual Update</p>
-      <h2 className="mt-2 text-xl font-semibold lp-ink">手动更新 Trending</h2>
+      <p className="lp-eyebrow">{t.eyebrow}</p>
+      <h2 className="mt-2 text-xl font-semibold lp-ink">{t.title}</h2>
       <p className="mt-3 text-sm leading-6 lp-muted">
-        输入 CRON_SECRET 后，可直接从前端触发一次抓取和总结。密钥只会用于本次请求。
+        {t.description}
       </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <input
@@ -82,7 +84,7 @@ export function UpdateTrendingButton() {
           type="password"
           value={secret}
           onChange={(event) => setSecret(event.target.value)}
-          placeholder="输入 CRON_SECRET"
+          placeholder={t.placeholder}
           autoComplete="off"
         />
         <button
@@ -91,7 +93,7 @@ export function UpdateTrendingButton() {
           onClick={updateTrending}
           disabled={status === "loading"}
         >
-          {status === "loading" ? "更新中..." : "立即更新"}
+          {status === "loading" ? t.buttonLoading : t.buttonIdle}
         </button>
       </div>
       {message ? (

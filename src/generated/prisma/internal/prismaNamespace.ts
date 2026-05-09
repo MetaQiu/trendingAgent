@@ -673,6 +673,7 @@ export const TrendingSnapshotScalarFieldEnum = {
   language: 'language',
   since: 'since',
   summary: 'summary',
+  summaryEn: 'summaryEn',
   insightsJson: 'insightsJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -696,9 +697,13 @@ export const TrendingRepoScalarFieldEnum = {
   forks: 'forks',
   starsToday: 'starsToday',
   summary: 'summary',
+  summaryEn: 'summaryEn',
   readmeSummary: 'readmeSummary',
+  readmeSummaryEn: 'readmeSummaryEn',
   recommendationReason: 'recommendationReason',
+  recommendationReasonEn: 'recommendationReasonEn',
   tagsJson: 'tagsJson',
+  tagsJsonEn: 'tagsJsonEn',
   createdAt: 'createdAt'
 } as const
 

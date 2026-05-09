@@ -1,19 +1,23 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { messages, type Locale } from "@/lib/i18n";
 
 export function StarsChart({
   title,
   data,
   dataKey,
+  locale,
 }: {
   title: string;
   data: Array<{ repoFullName: string } & Record<string, number | string>>;
   dataKey: string;
+  locale: Locale;
 }) {
+  const t = messages[locale].charts;
   return (
     <div className="lp-card h-96 p-5">
-      <p className="lp-eyebrow">Ranking</p>
+      <p className="lp-eyebrow">{t.rankingEyebrow}</p>
       <h2 className="mt-2 mb-4 text-lg font-semibold lp-ink">{title}</h2>
       <ResponsiveContainer width="100%" height="80%">
         <BarChart data={data} layout="vertical" margin={{ left: 80 }}>
