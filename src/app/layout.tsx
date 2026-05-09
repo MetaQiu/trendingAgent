@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GitHub Trending 智能总结",
-  description: "每日自动抓取、总结并可视化 GitHub Trending",
+  title: "GitHub Trending Signal Intelligence",
+  description: "AI-powered daily intelligence for discovering breakout open-source projects, decoding developer momentum, and mapping emerging technology trends.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body>
         {children}
         <footer className="mx-auto max-w-[1180px] px-6 py-8 text-center text-sm font-medium uppercase tracking-[0.18em] lp-muted">
