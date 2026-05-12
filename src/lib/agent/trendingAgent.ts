@@ -16,6 +16,7 @@ export type TrendingUpdateTrigger = "cron" | "manual" | "script";
 const REPO_LLM_CONCURRENCY = Number(process.env.REPO_LLM_CONCURRENCY || 5);
 const REPO_LLM_TIMEOUT_MS = Number(process.env.REPO_LLM_TIMEOUT_MS || 12000);
 const DAILY_SUMMARY_TIMEOUT_MS = Number(process.env.DAILY_SUMMARY_TIMEOUT_MS || 30000);
+const RUNNING_RUN_STALE_MS = Number(process.env.TRENDING_RUN_STALE_MS || 30 * 60 * 1000);
 
 export class TrendingUpdateAlreadyRunningError extends Error {
   statusCode = 409;
@@ -260,12 +261,25 @@ export async function runTrendingAgentWithLog(options?: {
   const since = options?.since ?? parseSince();
   const trigger = options?.trigger ?? "cron";
   const startedAt = new Date();
-  const runningSince = new Date(startedAt.getTime() - 30 * 60 * 1000);
+  const staleBefore = new Date(startedAt.getTime() - RUNNING_RUN_STALE_MS);
+
+  await prisma.trendingUpdateRun.updateMany({
+    where: {
+      status: "running",
+      startedAt: { lt: staleBefore },
+    },
+    data: {
+      status: "failed",
+      finishedAt: startedAt,
+      errorMessage: "更新任务超时，已自动标记为失败",
+      message: "更新任务超时，已自动标记为失败",
+    },
+  });
 
   const runningRun = await prisma.trendingUpdateRun.findFirst({
     where: {
       status: "running",
-      startedAt: { gte: runningSince },
+      startedAt: { gte: staleBefore },
     },
     orderBy: { startedAt: "desc" },
   });

@@ -7,7 +7,7 @@ import {
 } from "@/lib/agent/trendingAgent";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 function isAuthorized(request: NextRequest) {
   const secret = process.env.CRON_SECRET;
